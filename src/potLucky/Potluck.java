@@ -5,10 +5,13 @@ import java.io.Serializable;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -39,7 +42,9 @@ public class Potluck implements Serializable{
     /*
      * Creates an empty potluck with the given owner and owner email
     */
-    public Potluck(String owner, String owner_email) {
+    public Potluck(String owner, String owner_email) throws AddressException{
+    	InternetAddress email_address = new InternetAddress(owner_email);
+    	email_address.validate();
     	this.owner = owner;
     	this.owner_email = owner_email;
     	description = "";
@@ -222,11 +227,14 @@ public class Potluck implements Serializable{
     /*sets the owner and owner_email
      * if either of these is empty returns false and does nothing
      * adds the owner to the going list as well as the uncommitted list
+     * If the email address has any other formatting error, throws an exception
      */
-    public boolean add_owner(String owner, String owner_email) {
+    public boolean add_owner(String owner, String owner_email) throws AddressException{
     	if (owner != "" || owner_email == "") {
     		return false;
     	}
+    	InternetAddress email_address = new InternetAddress(owner_email);
+    	email_address.validate();
     	this.owner = owner;
     	this.owner_email = owner_email;
 		this.going.put(owner, owner_email);
@@ -245,10 +253,14 @@ public class Potluck implements Serializable{
      * 
      * returns true on success, false on failure.
      * In order to succeed neither parameter may be empty
+     * If there is an issue with the email address, but it is
+     * not empty, throws an exception
      */
-    public boolean replace_owner(String new_owner, String new_owner_email) {
+    public boolean replace_owner(String new_owner, String new_owner_email) throws AddressException {
     	if (new_owner.equals("") || new_owner_email.equals(""))
     		return false;
+    	InternetAddress email_address = new InternetAddress(new_owner_email);
+    	email_address.validate();
     	this.going.remove(owner);
     	this.uncommitted.remove(owner);
     	remove_committed_user(owner);
@@ -264,10 +276,12 @@ public class Potluck implements Serializable{
     /*
      * replaces the owner's email address if the new email is non-empty
      * changes the email address in the going list
-     * 
+     * If there is a format issue with the email address, throws an exception
      */
-    public void change_owner_email(String new_email) {
+    public void change_owner_email(String new_email) throws AddressException{
     	if (new_email != "") {
+    		InternetAddress email_address = new InternetAddress(new_email);
+        	email_address.validate();
     		this.owner_email = new_email;
     		this.going.put(owner, owner_email);
     	}
@@ -435,25 +449,34 @@ public class Potluck implements Serializable{
      * moves 1 or more users to the going list
      * removes them from the invitation or not going list
      * and sets them as uncommitted
-     * input format: <name, email>
-     * 
+     * input format: Set<name>
+     * returns a list of anyone not added to going
      */
-    public void add_going(Map<String, String> new_going) {
-    	for (String go : new_going.keySet()) {
+    public Set<String> add_going(Set<String> new_going) {
+    	Set<String> not_added = new HashSet<String>();
+    	for (String go : new_going) {
     		if (this.invited.containsKey(go)){
-    			this.going.put(go, new_going.get(go));
+    			this.going.put(go, invited.get(go));
     			this.invited.remove(go);
+    			this.uncommitted.add(go);
+    		}else if (this.not_going.containsKey(go)) {
+    			this.going.put(go, invited.get(go));
     			this.not_going.remove(go);
     			this.uncommitted.add(go);
+    		}else {
+    			not_added.add(go);
     		}
     	}
+    	return not_added;
 	}
     /*
      * removes 1 or more users from the going list
      * also removes anything htey have committed to bring
      * places them in the invited list
+     * returns a set of anyone not removed
      */
-    public void remove_going(Set<String> to_rem) {
+    public Set<String> remove_going(Set<String> to_rem) {
+    	Set <String> not_removed= new HashSet<String>();
     	for (String r : to_rem) {
     		if (this.going.containsKey(r)) {
 	    		String em = this.going.get(r);
@@ -461,29 +484,41 @@ public class Potluck implements Serializable{
 	    		remove_committed_user(r);
 	    		this.going.remove(r);
     		}
+    		else
+    			not_removed.add(r);
     	}
+    	return not_removed;
     }
+
     /*
      * moves 1 or more users to the not-going list
      * removes any commitments
      * removes the user from the going or invited list
      * if the user is in the uncommitted list, removes them 
      * 
-     * Input format:
-     * Map<user, email>
+     * returns a set of anyone not set to not going
      */
-    public void add_not_going(Map<String, String> new_not_going) {
-    	for (String go : new_not_going.keySet()) {
-    		if (this.invited.containsKey(go)||this.going.containsKey(go)) {
-    			this.not_going.put(go, new_not_going.get(go));
+    public Set<String> add_not_going(Set<String> new_not_going) {
+    	Set <String> not_added = new HashSet<String>();
+    	for (String go : new_not_going) {
+    		String em = null;
+    		if (this.invited.containsKey(go))
+    			em = this.invited.get(go);
+    		else if (this.going.containsKey(go))
+    			em = this.going.get(go);
+    		if (em != null) {
+    			
+    			this.not_going.put(go, em);
     			this.invited.remove(go);
     			if (this.going.containsKey(go) && !this.uncommitted.contains(go)) {
     				remove_committed_user(go);
     			}
     			this.going.remove(go);
     			this.uncommitted.remove(go);
-    		}
+    		}else
+    			not_added.add(go);
     	}
+    	return not_added;
 	}
 
     /*
@@ -492,27 +527,39 @@ public class Potluck implements Serializable{
      * 
      * input format:
      * Map<name, email> 
+     * returns a set of names of people who were not invited
      */
-    public void add_invited(Map<String, String>to_invite) {
+    public Set<String> add_invited(Map<String, String>to_invite) {
     	Map<String, String> act_inv = new HashMap<String, String>();
+    	Set<String> uninvited = new HashSet<String>();
     	for (String inv : to_invite.keySet()) {
     		if(this.invited.containsKey(inv) || 
     				this.going.containsKey(inv) ||
     				this.not_going.containsKey(inv)) {
-    			this.invited.put(inv, to_invite.get(inv));
-    			act_inv.put(inv, to_invite.get(inv));
-    		}
+    			try{
+    				InternetAddress email_address = new InternetAddress(to_invite.get(inv));
+    				email_address.validate();
+    				this.invited.put(inv, to_invite.get(inv));
+    				act_inv.put(inv, to_invite.get(inv));
+    			}catch (AddressException e) {
+    				uninvited.add(inv);
+    			}
+    		}else
+    			uninvited.add(inv);
     	}
     	invite_all(act_inv);
+    	return (Set<String>)uninvited;
 	}
     
     /*
      * Uninvites 1 or more users based on their names
-     * removes htem from their commitments
+     * removes them from their commitments
      * input: Set<name>
+     * returns a set of people who were not uninvited
      */
-    public void remove_invited(Set<String> to_remove) {
+    public Set<String> remove_invited(Set<String> to_remove) {
     	Map<String, String> to_uninvite = new HashMap<String, String>();
+    	Set<String> non_existent = new HashSet<String>();
     	for (String inv : to_remove) {
     		if (this.invited.containsKey(inv)) {
     			to_uninvite.put(inv, invited.get(inv));
@@ -525,9 +572,10 @@ public class Potluck implements Serializable{
     		}else if (this.not_going.containsKey(inv)) {
     			to_uninvite.put(inv,  not_going.get(inv));
     			this.not_going.remove(inv);
-    		}
+    		}else non_existent.add(inv);
     	}
     	uninvite_all(to_uninvite);
+    	return (Set<String>) non_existent;
     }
     
     /*
@@ -559,6 +607,7 @@ public class Potluck implements Serializable{
     		necessary_items.put(category ,to_add);
     	}
     }
+
     /*
      * removes a certain quantity of an item from the necessary items map
      */
@@ -605,6 +654,7 @@ public class Potluck implements Serializable{
     }
     
     //helper methods
+
     /*
      * checks whether a user has committed to bringing anything
      */
@@ -613,8 +663,7 @@ public class Potluck implements Serializable{
     	for(String category : this.committed_items.keySet()) {
     		for (String it : committed_items.get(category).keySet()) {
     			if (committed_items.get(category).get(it).containsKey(us))
-					return true;
-    			
+					return true;    			
     		}
     	}
     	return false;
@@ -627,22 +676,30 @@ public class Potluck implements Serializable{
     	String Message = new String();
     	Message += "Organizer " + owner + "\n";
     	Message += "Organizer email: " + owner_email+"\n";
-    	Message = Message +("Description: ");
-    	Message = Message + this.description;
-    	Message += "\n\n";
-    	Message += "Important Times:";
-    	for (String time_title : this.times.keySet()) {
-    		Message += "\n\t\t" + time_title + ":\t"  + this.times.get(time_title);
+    	if (!this.description.equals("")) {
+			Message = Message +("Description: ");
+			Message = Message + this.description;
+			Message += "\n\n";
     	}
-    	Message += "\n";
-    	Message += "Important Locations:";
-    	for (String loc_title : this.locations.keySet()) {
-    		Message += "\n\t\t" + loc_title + ":\t"  + this.locations.get(loc_title);
+    	if (this.times.isEmpty() == false){
+    		Message += "Important Times:";
+    		for (String time_title : this.times.keySet()) {
+    			Message += "\n\t\t" + time_title + ":\t"  + this.times.get(time_title);
+    		}
+    		Message += "\n";
     	}
-    	Message += "\n";
-    	Message += "Dietary restrictions";
-    	for (String rest_title : this.restrictions.keySet()) {
-    		Message += "\n\t\t" + rest_title + ":\t"  + this.restrictions.get(rest_title);
+    	if (this.locations.isEmpty() == false) {
+	    	Message += "Important Locations:";
+	    	for (String loc_title : this.locations.keySet()) {
+	    		Message += "\n\t\t" + loc_title + ":\t"  + this.locations.get(loc_title);
+	    	}
+	    	Message += "\n";
+    	}
+    	if (this.restrictions.isEmpty() == false) {
+	    	Message += "Dietary restrictions";
+	    	for (String rest_title : this.restrictions.keySet()) {
+	    		Message += "\n\t\t" + rest_title + ":\t"  + this.restrictions.get(rest_title);
+	    	}
     	}
     	return Message;
     }
