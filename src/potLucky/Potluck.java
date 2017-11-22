@@ -166,6 +166,7 @@ public class Potluck implements Serializable{
     public Map<String, String> get_locations() {
     	return (Map<String, String>) this.locations;
 	}
+    
     /*
      * returns the email addresses and names of any guests who
      * have responded that they are attending the potluck
@@ -217,6 +218,7 @@ public class Potluck implements Serializable{
 
     
     //setters
+    
     /*sets the owner and owner_email
      * if either of these is empty returns false and does nothing
      * adds the owner to the going list as well as the uncommitted list
@@ -271,6 +273,16 @@ public class Potluck implements Serializable{
     	}
     }
     
+    /*
+     * Records that user:user has committed to bring a quantity:quantity 
+     * of item: item, which is part of the category: category
+     * 
+     * if this item is in the necessary list, removes quantity of that item
+     * from the necessary list
+     * 
+     * records that this user is no longer part of the uncommitted list
+     * 
+     */
     public void add_committed_items(String category, String item, String user, Integer quantity) {
     	//add to committed_items dictionary
     	Map<String, Integer> to_add = new HashMap<String, Integer>();
@@ -309,6 +321,12 @@ public class Potluck implements Serializable{
         	
     }
         
+    /*
+     * Removes any commitments that user: user has made.
+     * does not add the user to the uncommitted list
+     * updates the necessary list as required
+     * 
+     */
     public void remove_committed_user(String user) {
     	for (Map.Entry<String, Map<String, Map<String,Integer>>> entry : this.committed_items.entrySet()) {
 			String category = entry.getKey();
@@ -325,6 +343,11 @@ public class Potluck implements Serializable{
     	}
     }
     
+    /*removes a specific commitment, specified by the category,
+     * item, and user
+     * updates the necessary list accordingly
+     * 
+     */
     public void remove_committed(String category, String item, String user) {
     	if (this.committed_items.containsKey(category) && 
     			this.committed_items.get(category).containsKey(item) && 
@@ -341,40 +364,80 @@ public class Potluck implements Serializable{
     	}
     }
     
+    /*
+     * overwrites the current description with a new description
+     */
     public void set_description(String new_description) {
         this.description = new_description;
     }
     
+    /*clears the current description
+     * 
+     */
     public void clear_description() {
         this.description = "";
     }
-        
+    
+    /*
+      * adds 1 or more new dietary restrictions.
+      * Input format:
+      * Map<Title, details>   
+      */
     public void add_restrictions(Map<String, String> new_restrictions) {
         this.restrictions.putAll(new_restrictions);
     }
+    
+    /*
+     * removes 1 or more dietary restrictions based on their
+     * titles
+     */
     public void remove_restrictions(Set<String> title) {
     	for (String tit : title)
     		this.restrictions.remove(tit);
     }
     
+    /*adds multiple times to the event.
+     * Input format:
+     * Map<Time description, time>
+     */
     public void add_times(Map<String, Date> new_times) {
     	this.times.putAll(new_times);
     }
-
+    
+    /*
+     * removes 1 or more times from the event  if they exits
+     */
     public void remove_times(Set<String> title) {
     	for (String tit: title)
     		this.times.remove(tit);
     }
     
+    /*
+     * adds 1 or more locations to the event.
+     * input format:
+     * Map<location description, location>
+     */
     public void add_locations(Map<String, String> new_locations) {
     	this.locations.putAll(new_locations);
 	}
-
+    
+    /*
+     * removes the locations that have the descriptions
+     * in title. If the description is not valid, ignores
+     * it
+     */
     public void remove_locations(Set<String> title) {
     	for(String tit : title)
     		this.locations.remove(tit);
     }
     
+    /*
+     * moves 1 or more users to the going list
+     * removes them from the invitation or not going list
+     * and sets them as uncommitted
+     * input format: <name, email>
+     * 
+     */
     public void add_going(Map<String, String> new_going) {
     	for (String go : new_going.keySet()) {
     		if (this.invited.containsKey(go)){
@@ -385,7 +448,11 @@ public class Potluck implements Serializable{
     		}
     	}
 	}
-
+    /*
+     * removes 1 or more users from the going list
+     * also removes anything htey have committed to bring
+     * places them in the invited list
+     */
     public void remove_going(Set<String> to_rem) {
     	for (String r : to_rem) {
     		if (this.going.containsKey(r)) {
@@ -396,9 +463,16 @@ public class Potluck implements Serializable{
     		}
     	}
     }
-    
+    /*
+     * moves 1 or more users to the not-going list
+     * removes any commitments
+     * removes the user from the going or invited list
+     * if the user is in the uncommitted list, removes them 
+     * 
+     * Input format:
+     * Map<user, email>
+     */
     public void add_not_going(Map<String, String> new_not_going) {
-    	this.not_going.putAll(new_not_going);
     	for (String go : new_not_going.keySet()) {
     		if (this.invited.containsKey(go)||this.going.containsKey(go)) {
     			this.not_going.put(go, new_not_going.get(go));
@@ -412,6 +486,13 @@ public class Potluck implements Serializable{
     	}
 	}
 
+    /*
+     * invites 1 or more users
+     * if a user is already invited, does not do anything
+     * 
+     * input format:
+     * Map<name, email> 
+     */
     public void add_invited(Map<String, String>to_invite) {
     	Map<String, String> act_inv = new HashMap<String, String>();
     	for (String inv : to_invite.keySet()) {
@@ -425,6 +506,11 @@ public class Potluck implements Serializable{
     	invite_all(act_inv);
 	}
     
+    /*
+     * Uninvites 1 or more users based on their names
+     * removes htem from their commitments
+     * input: Set<name>
+     */
     public void remove_invited(Set<String> to_remove) {
     	Map<String, String> to_uninvite = new HashMap<String, String>();
     	for (String inv : to_remove) {
@@ -434,6 +520,8 @@ public class Potluck implements Serializable{
     		}else if (this.going.containsKey(inv)) {
     			to_uninvite.put(inv,  going.get(inv));
     			this.going.remove(inv);
+    			remove_committed_user(inv);
+    			this.uncommitted.remove(inv);
     		}else if (this.not_going.containsKey(inv)) {
     			to_uninvite.put(inv,  not_going.get(inv));
     			this.not_going.remove(inv);
@@ -442,6 +530,11 @@ public class Potluck implements Serializable{
     	uninvite_all(to_uninvite);
     }
     
+    /*
+     * adds one or more items to the necessary list
+     * input:
+     * Map<Category, Map<item name, quantity required>>
+     */
     public void add_necessary_items(Map<String, Map<String, Integer>> to_add) {
     	for (String cat: to_add.keySet()) {
     		for (String it : to_add.get(cat).keySet()) {
@@ -450,6 +543,10 @@ public class Potluck implements Serializable{
     	}
 	}
     
+    /*
+     * adds 1 item to the necessary items. If it already exists,
+     * adds the quantities
+     */
     public void add_to_necessary(String category, String item, int needed) {
     	Map <String, Integer> to_add = new HashMap<String, Integer>();
     	to_add.put(item, needed);
@@ -462,7 +559,27 @@ public class Potluck implements Serializable{
     		necessary_items.put(category ,to_add);
     	}
     }
-    
+    /*
+     * removes a certain quantity of an item from the necessary items map
+     */
+    public void remove_from_necessary(String category, String item, int amount_to_remove) {
+    	if (this.necessary_items.containsKey(category)) {
+    		if (this.necessary_items.get(category).containsKey(item)) {
+    			this.necessary_items.get(category).put(item, this.necessary_items.get(category).get(item)-amount_to_remove);
+    			if (this.necessary_items.get(category).get(item) <=0) {
+    				this.necessary_items.get(category).remove(item);
+    				if (this.necessary_items.get(category).isEmpty()) {
+    					this.necessary_items.remove(category);
+    				}
+    			}
+    		}
+    	}
+    }
+
+    /*
+     * removes users' commitments and adds them to the uncommitted
+     * list
+     */
     public void add_to_uncommitted(List<String> users) {
     	for (String us : users) {
     		if (!this.uncommitted.contains(us) && this.going.containsKey(us)) {
@@ -472,6 +589,9 @@ public class Potluck implements Serializable{
     	}
 	}
     
+    /*
+     * removes users from the uncommitted list
+     */
     public void remove_from_uncommitted(List<String> users) {
     	for (String us : users) {
     		if (this.going.containsKey(us) && has_committed(us)) {
@@ -485,6 +605,9 @@ public class Potluck implements Serializable{
     }
     
     //helper methods
+    /*
+     * checks whether a user has committed to bringing anything
+     */
     private boolean has_committed(String us) {
     	//<Category, <name, <who committed, number committed to>>>
     	for(String category : this.committed_items.keySet()) {
@@ -497,6 +620,9 @@ public class Potluck implements Serializable{
     	return false;
     }
     
+    /*
+     * serializes the potluck information into a string
+     */
     private String get_info() {
     	String Message = new String();
     	Message += "Organizer " + owner + "\n";
@@ -521,12 +647,18 @@ public class Potluck implements Serializable{
     	return Message;
     }
     
+    /*
+     * sends uninvite messages to all users in the to_uninvite list
+     */
     private void uninvite_all(Map<String, String> to_univite) {
     	for (String name : to_univite.keySet()) {
     		uninvite(name, to_univite.get(name));
     	}
     }
-    
+
+    /*
+     * sends an uninvite notification to a given user
+     */
     private void uninvite(String name, String email) {
     	String Subject = "Potluck uninvitation";
     	String Message = "Hello ".concat(name).concat(" you have been uninvited from a potluck! "
@@ -534,12 +666,18 @@ public class Potluck implements Serializable{
     	//email Message to email
     }
     
+    /*
+     * sends invites all users in the map
+     */
     private void invite_all(Map<String, String> to_univite) {
     	for (String name : to_univite.keySet()) {
     		invite(name, to_univite.get(name));
     	}
     }
     
+    /*sends an invitation to a given user
+     * 
+     */
     private void invite(String name, String email) {
     	String Subject = "Potluck invitation";
     	String Message = "Hello ".concat(name).concat(" you have been invited to a potluck! "
