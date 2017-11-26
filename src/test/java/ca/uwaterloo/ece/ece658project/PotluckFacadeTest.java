@@ -1,4 +1,4 @@
-package potLucky.potLucky;
+package ca.uwaterloo.ece.ece658project;
 
 import java.sql.Date;
 import java.util.HashMap;
@@ -18,9 +18,9 @@ public class PotluckFacadeTest {
   @Test
   public void PotluckBasicInstantiation() {
 	boolean ex = false;
-	potLucky.PotluckFacade p = null;
+	PotluckFacade p = null;
 	try {
-		p = new potLucky.PotluckFacade("yaron", "yaronm93@gmail.com");
+		p = new PotluckFacade("yaron", "yaronm93@gmail.com");
 	}catch(AddressException e) {
 		ex = true;
 	}
@@ -37,7 +37,7 @@ public class PotluckFacadeTest {
   public void PotluckNoName() {
 	boolean ex = false;
 	try {
-		potLucky.PotluckFacade p = new potLucky.PotluckFacade("", "yaronm93@gmail.com");
+		PotluckFacade p = new PotluckFacade("", "yaronm93@gmail.com");
 	}catch(AddressException e) {
 		ex = true;
 	}
@@ -53,7 +53,7 @@ public class PotluckFacadeTest {
   public void PotluckNoEmail() {
 	boolean ex = false;
 	try {
-		potLucky.PotluckFacade p = new potLucky.PotluckFacade("Yaron", "");
+		PotluckFacade p = new PotluckFacade("Yaron", "");
 	}catch(AddressException e) {
 		ex = true;
 	}
@@ -69,7 +69,7 @@ public class PotluckFacadeTest {
   public void PotluckInvalidEmail() {
 	boolean ex = false;
 	try {
-		potLucky.PotluckFacade p = new potLucky.PotluckFacade("Yaron", "yaron");
+		PotluckFacade p = new PotluckFacade("Yaron", "yaron");
 	}catch(AddressException e) {
 		ex = true;
 	}
@@ -84,16 +84,16 @@ public class PotluckFacadeTest {
   @Test
   public void from_templateBasic() {
 	  boolean ex = false;
-	  potLucky.PotluckFacade p = null;
-	  potLucky.PotluckFacade template = null;
+	  PotluckFacade p = null;
+	  PotluckFacade template = null;
 	  Map<String, String> to_invite = null;
 	  Map<String, String> locations = null;
 	  Map<String, Map<String, Integer>> to_add = null;
 	  Map<String, String> new_restrictions = null;
 	  Map<String, Date>new_times = null;
 	  try {
-		p = new potLucky.PotluckFacade("yaron", "yaronm93@gmail.com");
-		template = new potLucky.PotluckFacade("yaron", "yaronm93@gmail.com");
+		p = new PotluckFacade("yaron", "yaronm93@gmail.com");
+		template = new PotluckFacade("yaron", "yaronm93@gmail.com");
 		to_invite = new HashMap<String, String>();
 		to_invite.put("yy", "y@y.c");
 		to_invite.put("ym", "ym@y.c");
@@ -146,8 +146,8 @@ public class PotluckFacadeTest {
   @Test
   public void from_templateGoingNotGoingNoCommitted() {
 	  boolean ex = false;
-	  potLucky.PotluckFacade p = null;
-	  potLucky.PotluckFacade template = null;
+	  PotluckFacade p = null;
+	  PotluckFacade template = null;
 	  Map<String, String> to_invite = null;
 	  Map<String, String> locations = null;
 	  Map<String, Map<String, Integer>> to_add = null;
@@ -159,8 +159,8 @@ public class PotluckFacadeTest {
 	  Set<String> not_set_to_not_going = null;
 	  
 	  try {
-		p = new potLucky.PotluckFacade("yaron", "yaronm93@gmail.com");
-		template = new potLucky.PotluckFacade("yaron", "yaronm93@gmail.com");
+		p = new PotluckFacade("yaron", "yaronm93@gmail.com");
+		template = new PotluckFacade("yaron", "yaronm93@gmail.com");
 		to_invite = new HashMap<String, String>();
 		to_invite.put("yy", "y@y.c");
 		to_invite.put("ym", "ym@y.c");

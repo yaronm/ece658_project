@@ -1,4 +1,4 @@
-package potLucky;
+package ca.uwaterloo.ece.ece658project;
 
 
 import java.io.Serializable;
