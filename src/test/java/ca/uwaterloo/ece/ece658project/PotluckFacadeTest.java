@@ -222,9 +222,9 @@ public class PotluckFacadeTest {
   @Test
   public void add_necessary_items_not_preexisting() {
 	  boolean ex = false;
-		potLucky.PotluckFacade p = null;
+		PotluckFacade p = null;
 		try {
-			p = new potLucky.PotluckFacade("yaron", "yaronm93@gmail.com");
+			p = new PotluckFacade("yaron", "yaronm93@gmail.com");
 		}catch(AddressException e) {
 			ex = true;
 		}
@@ -246,9 +246,9 @@ public class PotluckFacadeTest {
   @Test
   public void add_necessary_items_missing_info() {
 	boolean ex = false;
-	potLucky.PotluckFacade p = null;
+	PotluckFacade p = null;
 	try {
-		p = new potLucky.PotluckFacade("yaron", "yaronm93@gmail.com");
+		p = new PotluckFacade("yaron", "yaronm93@gmail.com");
 	}catch(AddressException e) {
 		ex = true;
 	}
@@ -282,9 +282,9 @@ public class PotluckFacadeTest {
   @Test
   public void add_necessary_items_preexisting() {
 		boolean ex = false;
-		potLucky.PotluckFacade p = null;
+		PotluckFacade p = null;
 		try {
-			p = new potLucky.PotluckFacade("yaron", "yaronm93@gmail.com");
+			p = new PotluckFacade("yaron", "yaronm93@gmail.com");
 		}catch(AddressException e) {
 			ex = true;
 		}
@@ -310,9 +310,9 @@ public class PotluckFacadeTest {
   @Test
   public void add_committed_items_entire_quantity_in_necessary() {
 	    boolean ex = false;
-		potLucky.PotluckFacade p = null;
+		PotluckFacade p = null;
 		try {
-			p = new potLucky.PotluckFacade("yaron", "yaronm93@gmail.com");
+			p = new PotluckFacade("yaron", "yaronm93@gmail.com");
 		}catch(AddressException e) {
 			ex = true;
 		}
