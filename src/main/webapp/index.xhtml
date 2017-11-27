@@ -1,7 +1,8 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://xmlns.jcp.org/jsf/html">
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
 <h:head>
 	<title>PotLucky</title>
 </h:head>
@@ -9,20 +10,23 @@
 	<h1>Welcome to PotLucky!</h1>
 	<h3>Please login:</h3>
 	<h:form>
-		<table>
-			<tr>
-				<td><h:outputLabel for="username" value="User Name" /></td>
-				<td><h:inputText id="username" /></td>
-			</tr>
-			<tr>
-				<td><h:outputLabel for="password" value="Password" /></td>
-				<td><h:inputSecret id="password" /></td>
-			</tr>
-			<tr>
-				<td></td>
-				<td><h:commandButton value="Login" /></td>
-			</tr>
-		</table>
+		<h:panelGrid columns="3">
+			<h:outputLabel for="name" value="Name" />
+			<h:inputText id="name" value="#{loginBean.name}" />
+			<h:message for="name" />
+
+			<h:outputLabel for="email" value="Email" />
+			<h:inputText id="email" value="#{loginBean.email}" />
+			<h:message for="email" />
+
+			<h:outputLabel for="password" value="Password" />
+			<h:inputSecret id="password" />
+			<h:panelGroup />
+
+			<h:panelGroup />
+			<h:commandButton value="Login" action="#{loginBean.login}" />
+			<h:panelGroup />
+		</h:panelGrid>
 	</h:form>
 </h:body>
 </html>
