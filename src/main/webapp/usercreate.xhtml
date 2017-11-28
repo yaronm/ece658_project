@@ -11,11 +11,11 @@
 		<h:form>
 			<h:panelGrid columns="3">
 				<h:outputLabel for="name" value="Name" />
-				<h:inputText id="name" value="#{userBean.name}" />
+				<h:inputText id="name" value="#{userCreateBean.name}" />
 				<h:message for="name" />
 
 				<h:outputLabel for="email" value="Email" />
-				<h:inputText id="email" value="#{userBean.email}" />
+				<h:inputText id="email" value="#{userCreateBean.email}" />
 				<h:message for="email" />
 
 				<h:outputLabel for="password" value="Password" />
@@ -23,7 +23,7 @@
 				<h:panelGroup />
 
 				<h:panelGroup />
-				<h:commandButton value="Create User" action="#{userBean.create}" />
+				<h:commandButton value="Create User" action="#{userCreateBean.create}" />
 				<h:panelGroup />
 			</h:panelGrid>
 			<h:messages globalOnly="true" />

@@ -1,5 +1,6 @@
 package ca.uwaterloo.ece.ece658project;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
@@ -11,18 +12,23 @@ import javax.ejb.Startup;
 @Startup
 public class DatabaseInitialization {
 
-	private static final Logger logger = Logger.getLogger(UserBean.class.getName());
+	private static final Logger logger = Logger.getLogger(DatabaseInitialization.class.getName());
 
 	@EJB
 	private UserManagerBean userManager;
 	
+	@EJB
+	private PotluckFacadeBean potluckFacade;
+	
 	@PostConstruct
 	public void initializeDatabase() {
 		try {
-			logger.info("create user ansel");
-			userManager.createUser("ansel", "ansel@horn.name");
+			logger.info("initializing database");
+			User ansel = userManager.createUser("Ansel Horn", "ansel@horn.name");
+			Potluck potluck = potluckFacade.createPotluck(ansel);
+			potluck.setDescription("My first potluck!");
 		} catch (LoginException e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
 	}
 

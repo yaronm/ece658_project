@@ -11,7 +11,7 @@
 		<h:form>
 			<h:panelGrid columns="3">
 				<h:outputLabel for="email" value="Email" />
-				<h:inputText id="email" value="#{userBean.email}" />
+				<h:inputText id="email" value="#{userLoginBean.email}" />
 				<h:message for="email" />
 
 				<h:outputLabel for="password" value="Password" />
@@ -19,7 +19,7 @@
 				<h:panelGroup />
 
 				<h:panelGroup />
-				<h:commandButton value="Login" action="#{userBean.login}" />
+				<h:commandButton value="Login" action="#{userLoginBean.login}" />
 				<h:panelGroup />
 			</h:panelGrid>
 			<h:messages globalOnly="true" />
