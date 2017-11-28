@@ -216,6 +216,92 @@ public class PotluckFacadeTest {
 	  assert(ex == false);
   }
   
+  /*
+   * test adding a necessary_item that doesn't exist yet
+   */
+  @Test
+  public void add_necessary_items_not_preexisting() {
+	  boolean ex = false;
+		PotluckFacade p = null;
+		try {
+			p = new PotluckFacade("yaron", "yaronm93@gmail.com");
+		}catch(AddressException e) {
+			ex = true;
+		}
+		Map<String, Map<String, Integer>> to_add = new HashMap<String, Map<String, Integer>>();
+		Map<String, Integer> item = new HashMap<String, Integer>();
+		item.put("ceasar", 3);
+		item.put("house", 2);
+		to_add.put("salad", item);
+		p.add_necessary_items(to_add);
+		assert (ex == false);
+	    assert (p.get_necessary_items().equals(to_add));
+  }
+  
+  /*
+   * test adding a necessary_item with an empty category
+   * test adding a necesssary_item with an empty name
+   * test addign a necessary_item with 0 quantity
+   */
+  @Test
+  public void add_necessary_items_missing_info() {
+	boolean ex = false;
+	PotluckFacade p = null;
+	try {
+		p = new PotluckFacade("yaron", "yaronm93@gmail.com");
+	}catch(AddressException e) {
+		ex = true;
+	}
+	Map<String, Map<String, Integer>> to_add = new HashMap<String, Map<String, Integer>>();
+	Map<String, Integer> item = new HashMap<String, Integer>();
+	item.put("ceasar", 3);
+	item.put("house", 2);
+	to_add.put("", item);
+	p.add_necessary_items(to_add);
+	assert(ex == false);
+	assert(p.get_necessary_items().isEmpty());
+	to_add.clear();
+	item.clear();
+	item.put("", 3);
+	to_add.put("salad", item);
+	p.add_necessary_items(to_add);
+	assert(p.get_necessary_items().isEmpty());
+	to_add.clear();
+	item.clear();
+	item.put("ceasar", 0);
+	to_add.put("salad", item);
+	p.add_necessary_items(to_add);
+	assert(p.get_necessary_items().isEmpty());
+	
+  }
+
+  
+  /*
+   * test adding a necessary_item that already exists
+   */
+  @Test
+  public void add_necessary_items_preexisting() {
+		boolean ex = false;
+		PotluckFacade p = null;
+		try {
+			p = new PotluckFacade("yaron", "yaronm93@gmail.com");
+		}catch(AddressException e) {
+			ex = true;
+		}
+		Map<String, Map<String, Integer>> to_add = new HashMap<String, Map<String, Integer>>();
+		Map<String, Integer> item = new HashMap<String, Integer>();
+		item.put("ceasar", 3);
+		item.put("house", 2);
+		to_add.put("salad", item);
+		p.add_necessary_items(to_add);
+		to_add.clear();
+		item.clear();
+		item.put("ceasar", 3);
+		to_add.put("salad", item);
+		assert (ex == false);
+		assert (p.get_necessary_items().get("salad").get("ceasar") == 6);
+  }
+
   /*test to make sure guests can commit to bring items
    * that are in the neccessary items, if the guest
    * commits to the entire quantity of a given type
@@ -223,7 +309,29 @@ public class PotluckFacadeTest {
    */
   @Test
   public void add_committed_items_entire_quantity_in_necessary() {
-    throw new RuntimeException("Test not implemented");
+	    boolean ex = false;
+		PotluckFacade p = null;
+		try {
+			p = new PotluckFacade("yaron", "yaronm93@gmail.com");
+		}catch(AddressException e) {
+			ex = true;
+		}
+		Map<String, Map<String, Integer>> to_add = new HashMap<String, Map<String, Integer>>();
+		Map<String, Integer> item = new HashMap<String, Integer>();
+		item.put("ceasar", 3);
+		item.put("house", 2);
+		to_add.put("salad", item);
+		p.add_necessary_items(to_add);
+		Set<String> going = new HashSet<String>();
+		going.add("ym");
+		Map<String,String> to_invite = new HashMap<String, String>();
+		to_invite.put("ym","y.m@u.c");
+		p.add_invited(to_invite);
+		p.add_going(going);
+		p.add_committed_items("salad", "house", "ym", 2);
+		assert (ex == false);
+	    assert (!p.get_necessary_items().get("salad").containsKey("house"));
+	    assert(p.get_committed_items().get("salad").get("house").get("ym") == 2);
   }
   
   /*test to make sure guests can commit to bring items
@@ -366,21 +474,6 @@ public class PotluckFacadeTest {
     throw new RuntimeException("Test not implemented");
   }
 
-  /*
-   * test adding a necessary_item that doesn't exist yet
-   */
-  @Test
-  public void add_necessary_items_not_preexisting() {
-    throw new RuntimeException("Test not implemented");
-  }
-  
-  /*
-   * test adding a necessary_item that already exists
-   */
-  @Test
-  public void add_necessary_items_preexisting() {
-    throw new RuntimeException("Test not implemented");
-  }
 
   /*
    * test add_not going, when guest was previously just invited
