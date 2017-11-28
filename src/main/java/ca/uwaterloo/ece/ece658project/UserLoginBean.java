@@ -38,9 +38,7 @@ public class UserLoginBean extends AbstractBean {
 			User user;
 			user = userManager.login(getEmail());
 			sessionBean.setUser(user);
-			System.out.println(sessionBean);
-			System.out.println(sessionBean.getUser());
-			return "potlucklisting";
+			return "success";
 		} catch (LoginException e) {
 			error(e.getMessage());
 			return null;

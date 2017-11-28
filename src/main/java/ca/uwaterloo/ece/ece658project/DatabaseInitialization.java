@@ -27,6 +27,8 @@ public class DatabaseInitialization {
 			User ansel = userManager.createUser("Ansel Horn", "ansel@horn.name");
 			Potluck potluck = potluckFacade.createPotluck(ansel);
 			potluck.setDescription("My first potluck!");
+			Potluck potluck2 = potluckFacade.createPotluck(ansel);
+			potluck2.setDescription("My second potluck...");
 		} catch (LoginException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 		}

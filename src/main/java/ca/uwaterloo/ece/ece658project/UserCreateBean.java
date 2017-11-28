@@ -27,7 +27,7 @@ public class UserCreateBean extends UserLoginBean {
 		try {
 			User user = userManager.createUser(getName(), getEmail());
 			sessionBean.setUser(user);
-			return "potlucklisting";
+			return "success";
 		} catch (LoginException e) {
 			error(e.getMessage());
 			return null;

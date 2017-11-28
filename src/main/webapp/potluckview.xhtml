@@ -7,16 +7,10 @@
 <ui:composition template="./template.xhtml">
 	<ui:define name="content">
 
-		<h2>Welcome to PotLucky!</h2>
-		<h:form>
-			<p>
-				Please
-				<h:commandLink action="userlogin">login</h:commandLink>
-				or
-				<h:commandLink action="usercreate">create a new user</h:commandLink>
-				to continue.
-			</p>
-		</h:form>
+		<p>
+			Viewing potluck
+			<h:outputText value="#{potluckBean.potluck.id}" />
+		</p>
 
 	</ui:define>
 </ui:composition>
