@@ -2,6 +2,7 @@ package ca.uwaterloo.ece.ece658project.managed;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -25,7 +26,7 @@ public class PotluckBean implements Serializable {
 
 	@EJB
 	protected PotluckInterface potluckManager;
-	
+
 	@EJB
 	protected UserManagerBean userManager;
 
@@ -74,17 +75,17 @@ public class PotluckBean implements Serializable {
 	public Map<String, User> getCommitments() {
 		return potluckManager.getCommitments();
 	}
-	
+
 	public Collection<User> getUncommitted() {
 		Set<User> uncommitted = new HashSet<>(getAttending());
 		uncommitted.removeAll(getCommitments().values());
 		return uncommitted;
 	}
-	
+
 	public Collection<String> getRestrictions() {
 		return potluckManager.getRestrictions();
 	}
-	
+
 	public boolean userIsInvited() {
 		for (User user : potluckManager.getInvited()) {
 			if (user.getEmail().equals(sessionBean.getEmail())) {
@@ -93,7 +94,7 @@ public class PotluckBean implements Serializable {
 		}
 		return false;
 	}
-	
+
 	public String acceptInvitation() {
 		potluckManager.acceptInvitation(sessionBean.getEmail());
 		return null;
@@ -102,7 +103,7 @@ public class PotluckBean implements Serializable {
 	@Pattern(regexp = "^[A-Za-z0-9._]+@[A-Za-z0-9.-]+$")
 	@NotNull
 	private String inviteEmail;
-	
+
 	public String getInviteEmail() {
 		return inviteEmail;
 	}
@@ -119,7 +120,52 @@ public class PotluckBean implements Serializable {
 		potluckManager.invite(getInviteEmail());
 		return null;
 	}
-	
+
+	@NotNull
+	private String newEventTitle;
+
+	@Pattern(regexp = "^\\d\\d\\d\\d-\\d\\d-\\d\\d \\d\\d:\\d\\d$")
+	@NotNull
+	private String newEventDate;
+
+	@NotNull
+	private String newEventDescription;
+
+	public String getNewEventTitle() {
+		return newEventTitle;
+	}
+
+	public void setNewEventTitle(String newEventTitle) {
+		this.newEventTitle = newEventTitle;
+	}
+
+	public String getNewEventDate() {
+		return newEventDate;
+	}
+
+	public void setNewEventDate(String newEventDate) {
+		this.newEventDate = newEventDate;
+	}
+
+	public String getNewEventDescription() {
+		return newEventDescription;
+	}
+
+	public void setNewEventDescription(String newEventDescription) {
+		this.newEventDescription = newEventDescription;
+	}
+
+	public String schedule() {
+		String[] dateAndTime = getNewEventDate().split(" ");
+		String[] date = dateAndTime[0].split("-");
+		String[] time = dateAndTime[1].split(":");
+		potluckManager.schedule(new Event(
+				getNewEventTitle(), new Date(Integer.valueOf(date[0]) - 1901, Integer.valueOf(date[1]),
+						Integer.valueOf(date[2]), Integer.valueOf(time[0]), Integer.valueOf(time[1])),
+				getNewEventDescription()));
+		return null;
+	}
+
 	@NotNull
 	private String newItem;
 
@@ -130,17 +176,17 @@ public class PotluckBean implements Serializable {
 	public void setNewItem(String newItem) {
 		this.newItem = newItem;
 	}
-	
+
 	public String addItem() {
 		potluckManager.addItem(getNewItem());
 		return null;
 	}
-	
+
 	public String commit(String item) {
 		potluckManager.commitToItem(item, sessionBean.getEmail());
 		return null;
 	}
-	
+
 	@NotNull
 	private String newRestriction;
 
@@ -151,7 +197,7 @@ public class PotluckBean implements Serializable {
 	public void setNewRestriction(String newRestriction) {
 		this.newRestriction = newRestriction;
 	}
-	
+
 	public String addRestriction() {
 		potluckManager.addRestriction(getNewRestriction());
 		return null;
