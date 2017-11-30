@@ -23,8 +23,9 @@
 		</h:dataTable>
 		<h:form rendered="#{potluckBean.userIsInvited()}">
 			<p>
-			You've been invited to join!
-			<h:commandButton value="Join" action="#{potluckBean.acceptInvitation}" />
+				You've been invited to join!
+				<h:commandButton value="Join"
+					action="#{potluckBean.acceptInvitation}" />
 			</p>
 		</h:form>
 		<h4>Invited</h4>
@@ -37,6 +38,7 @@
 			<h:outputLabel for="user" value="User to invite" />
 			<h:inputText id="user" value="#{potluckBean.inviteEmail}" />
 			<h:commandButton value="Invite" action="#{potluckBean.invite}" />
+			<h:message for="user" />
 		</h:form>
 
 		<h3>Time(s) and Date(s)</h3>
@@ -71,6 +73,7 @@
 			<h:outputLabel for="item" value="Add a new item" />
 			<h:inputText id="item" value="#{potluckBean.newItem}" />
 			<h:commandButton value="Add" action="#{potluckBean.addItem}" />
+			<h:message for="item" />
 		</h:form>
 		<h4>Uncommitted</h4>
 		<h:dataTable value="#{potluckBean.uncommitted}" var="user">
@@ -89,6 +92,7 @@
 			<h:outputLabel for="restriction" value="Add dietary restriction" />
 			<h:inputText id="restriction" value="#{potluckBean.newRestriction}" />
 			<h:commandButton value="Add" action="#{potluckBean.addRestriction}" />
+			<h:message for="restriction" />
 		</h:form>
 
 		<h:form>

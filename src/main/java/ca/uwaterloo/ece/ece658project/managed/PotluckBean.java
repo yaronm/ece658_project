@@ -11,6 +11,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import ca.uwaterloo.ece.ece658project.UserManagerBean;
 import ca.uwaterloo.ece.ece658project.interfaces.Event;
@@ -98,6 +99,8 @@ public class PotluckBean implements Serializable {
 		return null;
 	}
 
+	@Pattern(regexp = "^[A-Za-z0-9._]+@[A-Za-z0-9.-]+$")
+	@NotNull
 	private String inviteEmail;
 	
 	public String getInviteEmail() {
@@ -109,9 +112,6 @@ public class PotluckBean implements Serializable {
 	}
 
 	public String invite() {
-		if (getInviteEmail() == null) {
-			return null;
-		}
 		User user = userManager.getUser(getInviteEmail());
 		if (user == null) {
 			return null;
@@ -120,6 +120,7 @@ public class PotluckBean implements Serializable {
 		return null;
 	}
 	
+	@NotNull
 	private String newItem;
 
 	public String getNewItem() {
@@ -131,9 +132,6 @@ public class PotluckBean implements Serializable {
 	}
 	
 	public String addItem() {
-		if (getNewItem() == null) {
-			return null;
-		}
 		potluckManager.addItem(getNewItem());
 		return null;
 	}
@@ -143,6 +141,7 @@ public class PotluckBean implements Serializable {
 		return null;
 	}
 	
+	@NotNull
 	private String newRestriction;
 
 	public String getNewRestriction() {
@@ -154,9 +153,6 @@ public class PotluckBean implements Serializable {
 	}
 	
 	public String addRestriction() {
-		if (getNewRestriction() == null) {
-			return null;
-		}
 		potluckManager.addRestriction(getNewRestriction());
 		return null;
 	}

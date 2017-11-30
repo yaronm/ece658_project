@@ -14,7 +14,7 @@
 	<navigation-rule>
 		<from-view-id>/usercreate.xhtml</from-view-id>
 		<navigation-case>
-			<from-action>#{userCreateBean.login}</from-action>
+			<from-action>#{userCreateBean.create}</from-action>
 			<from-outcome>success</from-outcome>
 			<to-view-id>/potlucklisting.xhtml</to-view-id>
 		</navigation-case>

@@ -4,6 +4,8 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import ca.uwaterloo.ece.ece658project.UserManagerBean;
 import ca.uwaterloo.ece.ece658project.exception.LoginException;
@@ -19,8 +21,8 @@ public class UserLoginBean extends AbstractBean {
 	@Inject
 	protected SessionBean sessionBean;
 
-//	@NotNull
-//	@Pattern(regexp = "^[A-Za-z0-9._]+@[A-Za-z0-9.-]+$")
+	@NotNull
+	@Pattern(regexp = "^[A-Za-z0-9._]+@[A-Za-z0-9.-]+$")
 	private String email;
 
 	public UserLoginBean() {
@@ -36,22 +38,13 @@ public class UserLoginBean extends AbstractBean {
 
 	public String login() {
 		try {
-			userManager.login("ansel@horn.name");
-			sessionBean.setEmail("ansel@horn.name");
+			userManager.login(getEmail());
+			sessionBean.setEmail(getEmail());
 			return "success";
 		} catch (LoginException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			error(e.getMessage());
 			return null;
 		}
-//		try {
-//			userManager.login(getEmail());
-//			sessionBean.setEmail(getEmail);
-//			return "success";
-//		} catch (LoginException e) {
-//			error(e.getMessage());
-//			return null;
-//		}
 	}
 
 }

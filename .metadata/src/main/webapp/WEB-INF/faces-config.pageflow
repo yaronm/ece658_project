@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf15118955094220" configfile="/ece658project/src/main/webapp/WEB-INF/faces-config.xml">
   <nodes xsi:type="pageflow:PFPage" id="pf15118955777231" referenceLink="//@navigationRule.0/@fromViewId|"/>
-  <nodes xsi:type="pageflow:PFPage" name="userlogin.xhtml" id="pf15118959400975" referenceLink="//@navigationRule.1/@fromViewId|" outlinks="pf15118959400976" path="/userlogin.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="userlogin.xhtml" id="pf15118959400975" referenceLink="//@navigationRule.0/@fromViewId|" outlinks="pf15118959400976" path="/userlogin.xhtml"/>
   <nodes xsi:type="pageflow:PFPage" name="potlucklisting.xhtml" id="pf15118959400977" referenceLink="//@navigationRule.1/@navigationCase.0/@toViewId|" inlinks="pf15118959400976 pf151189904520012" path="/potlucklisting.xhtml"/>
   <nodes xsi:type="pageflow:PFPage" name="usercreate.xhtml" id="pf151189904520013" referenceLink="//@navigationRule.1/@fromViewId|" outlinks="pf151189904520012" path="/usercreate.xhtml"/>
   <links id="pf15118959400976" target="pf15118959400977" source="pf15118959400975" outcome="success" fromaction="#{userLoginBean.login}"/>
-  <links id="pf151189904520012" target="pf15118959400977" source="pf151189904520013" outcome="success" fromaction="#{userCreateBean.login}"/>
+  <links id="pf151189904520012" target="pf15118959400977" source="pf151189904520013" outcome="success" fromaction="#{userCreateBean.create}"/>
 </pageflow:Pageflow>
