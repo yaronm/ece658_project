@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.ejb.EJB;
-import javax.faces.view.ViewScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.validation.constraints.NotNull;
@@ -18,7 +18,7 @@ import ca.uwaterloo.ece.ece658project.interfaces.PotluckInterface;
 import ca.uwaterloo.ece.ece658project.interfaces.User;
 
 @Named
-@ViewScoped
+@SessionScoped
 @SuppressWarnings("serial")
 public class PotluckBean implements Serializable {
 
