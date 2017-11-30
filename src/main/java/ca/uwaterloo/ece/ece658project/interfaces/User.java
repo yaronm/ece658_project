@@ -25,4 +25,18 @@ public class User {
 			return potlucks;
 		}
 		
+		@Override
+		public int hashCode() {
+			return email.hashCode();
+		}
+		
+		@Override
+		public boolean equals(Object other) {
+			if (other instanceof User) {
+				User otherUser = (User) other;
+				return getEmail() == otherUser.getEmail();
+			}
+			return false;
+		}
+		
 }

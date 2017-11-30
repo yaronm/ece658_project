@@ -42,6 +42,9 @@ public class DatabaseInitialization {
 			potluckFacade.schedule(new Event("Potluck", new Date(117, 12, 1, 19, 0), "My house"));
 			potluckFacade.acceptInvitation(ansel);
 			potluckFacade.invite(user1);
+			potluckFacade.addItem("Hamburgers");
+			potluckFacade.addItem("Cheese");
+			potluckFacade.commitToItem("Cheese", ansel);
 			potluckFacade.createPotluck("Second Potluck", ansel, "My second potluck...");
 		} catch (LoginException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);

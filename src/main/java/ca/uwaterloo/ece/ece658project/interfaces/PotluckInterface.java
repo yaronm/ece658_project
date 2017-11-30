@@ -21,7 +21,7 @@ public interface PotluckInterface {
 	
 	public void addItem(String item);
 	
-	public void commitToItem(String email, String item);
+	public void commitToItem(String item, String email);
 	
 	public PotluckMetadata getMetadata();
 
@@ -33,6 +33,6 @@ public interface PotluckInterface {
 	
 	public Collection<String> getItems();
 	
-	public Map<String, String> getCommitments();
+	public Map<String, User> getCommitments();
 
 }

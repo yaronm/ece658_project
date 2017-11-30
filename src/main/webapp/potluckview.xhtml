@@ -40,6 +40,22 @@
 				<h:outputText value="#{user.name}" />
 			</h:column>
 		</h:dataTable>
+		
+		<h3>Items</h3>
+		<h:dataTable value="#{potluckBean.items}" var="item">
+			<h:column>
+				<h:outputText value="#{item}" />
+			</h:column>
+			<h:column>
+				<h:outputText value="#{potluckBean.commitments.get(item).name}" />
+			</h:column>
+		</h:dataTable>
+		<h4>Uncommitted</h4>
+		<h:dataTable value="#{potluckBean.uncommitted}" var="user">
+			<h:column>
+				<h:outputText value="#{user.name}" />
+			</h:column>
+		</h:dataTable>
 
 	</ui:define>
 </ui:composition>

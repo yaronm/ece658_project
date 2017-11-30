@@ -2,6 +2,7 @@ package ca.uwaterloo.ece.ece658project;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -94,14 +95,12 @@ public class PotluckFacadeBean implements PotluckInterface {
 
 	@Override
 	public void addItem(String item) {
-		// TODO Auto-generated method stub
-
+		potluck.getNecessaryItems().add(item);
 	}
 
 	@Override
-	public void commitToItem(String item, String user) {
-		// TODO Auto-generated method stub
-
+	public void commitToItem(String item, String email) {
+		potluck.getCommitedItems().put(item, email);
 	}
 
 	@Override
@@ -142,14 +141,17 @@ public class PotluckFacadeBean implements PotluckInterface {
 
 	@Override
 	public Collection<String> getItems() {
-		// TODO Auto-generated method stub
-		return null;
+		return potluck.getNecessaryItems();
 	}
 
 	@Override
-	public Map<String, String> getCommitments() {
-		// TODO Auto-generated method stub
-		return null;
+	public Map<String, User> getCommitments() {
+		Map<String, User> commitments = new HashMap<>();
+		for (Map.Entry<String, String> entry : potluck.getCommitedItems().entrySet()) {
+			User user = userManager.getUser(entry.getValue());
+			commitments.put(entry.getKey(), user);
+		}
+		return commitments;
 	}
 
 }
