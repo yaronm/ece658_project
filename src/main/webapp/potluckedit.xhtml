@@ -14,6 +14,31 @@
 			<h:outputText value="#{potluckBean.description}" />
 		</p>
 
+		<h3>People</h3>
+		<h4>Attending</h4>
+		<h:dataTable value="#{potluckBean.attending}" var="user">
+			<h:column>
+				<h:outputText value="#{user.name}" />
+			</h:column>
+		</h:dataTable>
+		<h:form rendered="#{potluckBean.userIsInvited()}">
+			<p>
+			You've been invited to join!
+			<h:commandButton value="Join" action="#{potluckBean.acceptInvitation}" />
+			</p>
+		</h:form>
+		<h4>Invited</h4>
+		<h:dataTable value="#{potluckBean.invited}" var="user">
+			<h:column>
+				<h:outputText value="#{user.name}" />
+			</h:column>
+		</h:dataTable>
+		<h:form>
+			<h:outputLabel for="user" value="User to invite" />
+			<h:inputText id="user" value="#{potluckBean.inviteEmail}" />
+			<h:commandButton value="Invite" action="#{potluckBean.invite}" />
+		</h:form>
+
 		<h3>Time(s) and Date(s)</h3>
 		<h:dataTable value="#{potluckBean.events}" var="event">
 			<h:column>
@@ -26,25 +51,6 @@
 				<h:outputText value="#{event.description}" />
 			</h:column>
 		</h:dataTable>
-
-		<h3>People</h3>
-		<h4>Attending</h4>
-		<h:dataTable value="#{potluckBean.attending}" var="user">
-			<h:column>
-				<h:outputText value="#{user.name}" />
-			</h:column>
-		</h:dataTable>
-		<h4>Invited</h4>
-		<h:dataTable value="#{potluckBean.invited}" var="user">
-			<h:column>
-				<h:outputText value="#{user.name}" />
-			</h:column>
-		</h:dataTable>
-		<h:form>
-			<h:outputLabel for="user" value="User to invite" />
-			<h:inputText id="user" value="#{potluckBean.inviteEmail}" />
-			<h:commandButton value="Invite" action="#{potluckBean.invite}" />
-		</h:form>
 
 		<h3>Items</h3>
 		<h:dataTable value="#{potluckBean.items}" var="item">
