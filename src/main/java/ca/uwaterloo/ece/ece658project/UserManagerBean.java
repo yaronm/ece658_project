@@ -7,11 +7,13 @@ import java.util.logging.Logger;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.ejb.EJB;
 
 import ca.uwaterloo.ece.ece658project.entity.PotluckEntity;
 import ca.uwaterloo.ece.ece658project.entity.UserEntity;
 import ca.uwaterloo.ece.ece658project.exception.LoginException;
 import ca.uwaterloo.ece.ece658project.interfaces.User;
+
 
 @Stateful
 public class UserManagerBean {
@@ -20,6 +22,9 @@ public class UserManagerBean {
 
 	@PersistenceContext
 	private EntityManager entityManager;
+	
+	@EJB 
+	private NotificationSystemBean emailBean;
 
 	public void createUser(String name, String email) throws LoginException {
 		logger.info("Create user: " + name + " <" + email + ">");
@@ -33,6 +38,9 @@ public class UserManagerBean {
 		// if not, create a new user
 		UserEntity user = new UserEntity(name, email);
 		entityManager.persist(user);
+		String message = "Hello " + name +"\n you have created a new potluck account. We hope you have great get togethers. \n Warm regards, \n The potLucky team";
+		emailBean.sendEmail(email, "Potluck user created", message);
+
 	}
 
 	public User getUser(String email) {
