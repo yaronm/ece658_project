@@ -37,6 +37,9 @@ public class UserManagerBean {
 
 	public User getUser(String email) {
 		UserEntity user = entityManager.find(UserEntity.class, email);
+		if (user == null) {
+			return null;
+		}
 		Collection<Long> potlucks = new LinkedList<>();
 		for (PotluckEntity potluck : user.getPotlucks()) {
 			potlucks.add(potluck.getId());

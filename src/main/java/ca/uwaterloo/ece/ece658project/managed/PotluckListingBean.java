@@ -7,16 +7,17 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.SessionScoped;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.validation.constraints.NotNull;
 
 import ca.uwaterloo.ece.ece658project.UserManagerBean;
 import ca.uwaterloo.ece.ece658project.interfaces.PotluckInterface;
 import ca.uwaterloo.ece.ece658project.interfaces.User;
 
 @Named
-@SessionScoped
+@ViewScoped
 @SuppressWarnings("serial")
 public class PotluckListingBean implements Serializable {
 
@@ -74,6 +75,36 @@ public class PotluckListingBean implements Serializable {
 
 	public String edit(Long potluck) {
 		potluckBean.setPotluck(potluck);
+		return "potluckedit";
+	}
+
+	@NotNull
+	private String newName;
+
+	private String newDescription;
+
+	public String getNewName() {
+		return newName;
+	}
+
+	public void setNewName(String newName) {
+		this.newName = newName;
+	}
+
+	public String getNewDescription() {
+		return newDescription;
+	}
+
+	public void setNewDescription(String newDescription) {
+		if (newDescription == null) {
+			newDescription = "";
+		}
+		this.newDescription = newDescription;
+	}
+
+	public String create() {
+		Long id = potluckManager.createPotluck(getNewName(), sessionBean.getEmail(), getNewDescription());
+		potluckBean.setPotluck(id);
 		return "potluckedit";
 	}
 

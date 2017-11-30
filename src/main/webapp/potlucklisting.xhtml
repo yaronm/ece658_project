@@ -8,6 +8,7 @@
 <ui:composition template="./template.xhtml">
 	<ui:define name="content">
 
+		<h3>Your Potlucks</h3>
 		<h:form>
 			<h:dataTable value="#{potluckListingBean.potlucks}" var="id">
 				<h:column>
@@ -23,6 +24,23 @@
 					<h:outputText value="#{potluckListingBean.potluckDescriptions.get(id)}" />
 				</h:column>
 			</h:dataTable>
+		</h:form>
+
+		<h3>Make a new potluck</h3>
+		<h:form>
+			<h:panelGrid columns="3">
+				<h:outputLabel for="name" value="Potluck Name" />
+				<h:inputText id="name" value="#{potluckListingBean.newName}" />
+				<h:message for="name" />
+
+				<h:outputLabel for="description" value="Potluck Description" />
+				<h:inputTextarea id="description" value="#{potluckListingBean.newDescription}"/>
+				<h:panelGroup />
+
+				<h:panelGroup />
+				<h:commandButton value="create" action="#{potluckListingBean.create}"/>
+				<h:panelGroup />
+			</h:panelGrid>
 		</h:form>
 
 	</ui:define>

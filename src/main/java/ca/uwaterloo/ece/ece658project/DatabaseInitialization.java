@@ -38,8 +38,8 @@ public class DatabaseInitialization {
 			// create potlucks
 			Long potluck1, potluck2;
 			potluck1 = potluckFacade.createPotluck("First Potluck", ansel, "My first potluck!");
-			potluckFacade.schedule(new Event("Setup", new Date(117, 12, 1, 18, 0), "Setup for the potluck."));
-			potluckFacade.schedule(new Event("Potluck", new Date(117, 12, 1, 19, 0), "My house"));
+//			potluckFacade.schedule(new Event("Setup", new Date(117, 12, 1, 18, 0), "Setup for the potluck."));
+//			potluckFacade.schedule(new Event("Potluck", new Date(117, 12, 1, 19, 0), "My house"));
 			potluckFacade.acceptInvitation(ansel);
 			potluckFacade.invite(user1);
 			potluckFacade.addItem("Hamburgers");

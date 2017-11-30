@@ -7,10 +7,83 @@
 <ui:composition template="./template.xhtml">
 	<ui:define name="content">
 
+		<h2>
+			<h:outputText value="#{potluckBean.name}" />
+		</h2>
 		<p>
-			Editing potluck
-			<h:outputText value="#{potluckBean.potluck.id}" />
+			<h:outputText value="#{potluckBean.description}" />
 		</p>
+
+		<h3>Time(s) and Date(s)</h3>
+		<h:dataTable value="#{potluckBean.events}" var="event">
+			<h:column>
+				<h:outputText value="#{event.title}" />
+			</h:column>
+			<h:column>
+				<h:outputText value="#{event.date.toString()}" />
+			</h:column>
+			<h:column>
+				<h:outputText value="#{event.description}" />
+			</h:column>
+		</h:dataTable>
+
+		<h3>People</h3>
+		<h4>Attending</h4>
+		<h:dataTable value="#{potluckBean.attending}" var="user">
+			<h:column>
+				<h:outputText value="#{user.name}" />
+			</h:column>
+		</h:dataTable>
+		<h4>Invited</h4>
+		<h:dataTable value="#{potluckBean.invited}" var="user">
+			<h:column>
+				<h:outputText value="#{user.name}" />
+			</h:column>
+		</h:dataTable>
+		<h:form>
+			<h:outputLabel for="user" value="User to invite" />
+			<h:inputText id="user" value="#{potluckBean.inviteEmail}" />
+			<h:commandButton value="Invite" action="#{potluckBean.invite}" />
+		</h:form>
+
+		<h3>Items</h3>
+		<h:dataTable value="#{potluckBean.items}" var="item">
+			<h:column>
+				<h:form>
+					<h:commandButton value="Commit"
+						action="#{potluckBean.commit(item)}" />
+				</h:form>
+			</h:column>
+			<h:column>
+				<h:outputText value="#{item}" />
+			</h:column>
+			<h:column>
+				<h:outputText value="#{potluckBean.commitments.get(item).name}" />
+			</h:column>
+		</h:dataTable>
+		<h:form>
+			<h:outputLabel for="item" value="Add a new item" />
+			<h:inputText id="item" value="#{potluckBean.newItem}" />
+			<h:commandButton value="Add" action="#{potluckBean.addItem}" />
+		</h:form>
+		<h4>Uncommitted</h4>
+		<h:dataTable value="#{potluckBean.uncommitted}" var="user">
+			<h:column>
+				<h:outputText value="#{user.name}" />
+			</h:column>
+		</h:dataTable>
+
+		<h4>Dietary Restrictions</h4>
+		<h:dataTable value="#{potluckBean.restrictions}" var="restriction">
+			<h:column>
+				<h:outputText value="#{restriction}" />
+			</h:column>
+		</h:dataTable>
+		<h:form>
+			<h:outputLabel for="restriction" value="Add dietary restriction" />
+			<h:inputText id="restriction" value="#{potluckBean.newRestriction}" />
+			<h:commandButton value="Add" action="#{potluckBean.addRestriction}" />
+		</h:form>
 
 	</ui:define>
 </ui:composition>
