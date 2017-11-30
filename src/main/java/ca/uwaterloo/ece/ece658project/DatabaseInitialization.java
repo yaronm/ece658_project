@@ -23,7 +23,7 @@ public class DatabaseInitialization {
 	private UserManagerBean userManager;
 	
 	@EJB
-	private PotluckInterface potluckFacade;
+	private PotluckInterface potluckManager;
 	
 	@PostConstruct
 	public void initializeDatabase() {
@@ -37,16 +37,18 @@ public class DatabaseInitialization {
 			userManager.createUser("User1", user1);
 			// create potlucks
 			Long potluck1, potluck2;
-			potluck1 = potluckFacade.createPotluck("First Potluck", ansel, "My first potluck!");
-//			potluckFacade.schedule(new Event("Setup", new Date(117, 12, 1, 18, 0), "Setup for the potluck."));
-//			potluckFacade.schedule(new Event("Potluck", new Date(117, 12, 1, 19, 0), "My house"));
-			potluckFacade.acceptInvitation(ansel);
-			potluckFacade.invite(user1);
-			potluckFacade.addItem("Hamburgers");
-			potluckFacade.addItem("Cheese");
-			potluckFacade.commitToItem("Cheese", ansel);
-			potluckFacade.addRestriction("Vegitarian food only, please!");
-			potluckFacade.createPotluck("Second Potluck", ansel, "My second potluck...");
+			potluck1 = potluckManager.createPotluck("First Potluck", ansel, "My first potluck!");
+			System.out.println(potluck1);
+			System.out.println(potluckManager.getMetadata());
+			potluckManager.schedule(new Event("Setup", new Date(117, 12, 1, 18, 0), "Setup for the potluck."));
+			potluckManager.schedule(new Event("Potluck", new Date(117, 12, 1, 19, 0), "My house"));
+			potluckManager.acceptInvitation(ansel);
+			potluckManager.invite(user1);
+			potluckManager.addItem("Hamburgers");
+			potluckManager.addItem("Cheese");
+			potluckManager.commitToItem("Cheese", ansel);
+			potluckManager.addRestriction("Vegitarian food only, please!");
+			potluckManager.createPotluck("Second Potluck", ansel, "My second potluck...");
 		} catch (LoginException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
