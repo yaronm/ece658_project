@@ -57,6 +57,13 @@
 			</h:column>
 		</h:dataTable>
 
+		<h4>Dietary Restrictions</h4>
+		<h:dataTable value="#{potluckBean.restrictions}" var="restriction">
+			<h:column>
+				<h:outputText value="#{restriction}" />
+			</h:column>
+		</h:dataTable>
+
 	</ui:define>
 </ui:composition>
 

@@ -75,5 +75,9 @@ public class PotluckBean implements Serializable {
 		uncommitted.removeAll(getCommitments().values());
 		return uncommitted;
 	}
+	
+	public Collection<String> getRestrictions() {
+		return potluckManager.getRestrictions();
+	}
 
 }

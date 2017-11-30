@@ -23,6 +23,8 @@ public interface PotluckInterface {
 	
 	public void commitToItem(String item, String email);
 	
+	public void addRestriction(String restriction);
+	
 	public PotluckMetadata getMetadata();
 
 	public Collection<Event> getEvents();
@@ -34,5 +36,7 @@ public interface PotluckInterface {
 	public Collection<String> getItems();
 	
 	public Map<String, User> getCommitments();
+	
+	public Collection<String> getRestrictions();
 
 }

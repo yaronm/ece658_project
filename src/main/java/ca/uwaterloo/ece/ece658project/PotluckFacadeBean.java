@@ -104,6 +104,11 @@ public class PotluckFacadeBean implements PotluckInterface {
 	}
 
 	@Override
+	public void addRestriction(String restriction) {
+		potluck.getRestrictions().add(restriction);
+	}
+
+	@Override
 	public PotluckMetadata getMetadata() {
 		User owner = userManager.getUser(potluck.getOwnerEmail());
 		return new PotluckMetadata(potluck.getName(), owner, potluck.getDescription());
@@ -152,6 +157,11 @@ public class PotluckFacadeBean implements PotluckInterface {
 			commitments.put(entry.getKey(), user);
 		}
 		return commitments;
+	}
+
+	@Override
+	public Collection<String> getRestrictions() {
+		return potluck.getRestrictions();
 	}
 
 }

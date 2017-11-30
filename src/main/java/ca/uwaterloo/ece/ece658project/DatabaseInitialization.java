@@ -45,6 +45,7 @@ public class DatabaseInitialization {
 			potluckFacade.addItem("Hamburgers");
 			potluckFacade.addItem("Cheese");
 			potluckFacade.commitToItem("Cheese", ansel);
+			potluckFacade.addRestriction("Vegitarian food only, please!");
 			potluckFacade.createPotluck("Second Potluck", ansel, "My second potluck...");
 		} catch (LoginException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);

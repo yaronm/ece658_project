@@ -52,6 +52,9 @@ public class PotluckEntity implements Serializable {
 
 	@ElementCollection(fetch=FetchType.EAGER)
 	private Map<String, String> commitedItems = new HashMap<>();
+	
+	@ElementCollection(fetch=FetchType.EAGER)
+	private Collection<String> restrictions = new LinkedList<>();
 
 	public PotluckEntity() {
 	}
@@ -142,6 +145,14 @@ public class PotluckEntity implements Serializable {
 
 	public void setCommitedItems(Map<String, String> commitedItems) {
 		this.commitedItems = commitedItems;
+	}
+
+	public Collection<String> getRestrictions() {
+		return restrictions;
+	}
+
+	public void setRestrictions(Collection<String> restrictions) {
+		this.restrictions = restrictions;
 	}
 
 }
