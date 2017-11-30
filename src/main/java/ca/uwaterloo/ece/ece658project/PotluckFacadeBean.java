@@ -29,6 +29,9 @@ public class PotluckFacadeBean implements PotluckInterface {
 
 	private PotluckEntity potluck;
 
+	@EJB
+ 	private NotificationSystemBean emailBean;
+
 	@Override
 	public Long createPotluck(String name, String owner, String description) {
 		potluck = new PotluckEntity();
@@ -58,6 +61,12 @@ public class PotluckFacadeBean implements PotluckInterface {
 	public void schedule(Event event) {
 		potluck.getEventTimes().put(event.getTitle(), event.getDate());
 		potluck.getEventDescriptions().put(event.getTitle(), event.getDescription());
+		for (UserEntity user : potluck.getusers.values()()){
+			String message = "Hello " + user.getName() +"\n Your potluck "+potluck.getName()+" has a new time and description."+
+				"The new description is: \n "+event.getTitle()"+: "+ event.getDescription()+
+				"\n and the new time is: \n" + event.getDate())+"\n Warm regards, \n The potLucky team";
+			emailBean.sendEmail(user.getEmail(), "Potluck time and description added", message);
+		}
 	}
 
 	@Override
@@ -69,6 +78,11 @@ public class PotluckFacadeBean implements PotluckInterface {
 		potluck.getUsers().put(user.getEmail(), user);
 		potluck.getAttendingEmails().remove(user.getEmail());
 		potluck.getInvitedEmails().add(user.getEmail());
+		String message = "Hello " + user.getName() +"\n You have been invited to a new potluck!\n"+
+			"the potluck was created by " + entityManager.find(UserEntity.class, potluck.getOwnerEmail()).getName() +
+			"please log in to your account to view the potluck details.\nWarm regards, \n The potLucky team";
+		emailBean.sendEmail(email, "Potluck invitation", message);
+
 	}
 
 	@Override
@@ -80,6 +94,11 @@ public class PotluckFacadeBean implements PotluckInterface {
 		potluck.getUsers().put(user.getEmail(), user);
 		potluck.getAttendingEmails().add(user.getEmail());
 		potluck.getInvitedEmails().remove(user.getEmail());
+
+		String message = "Hello " + entityManager.find(UserEntity.class, potluck.getOwnerEmail()).getName() +
+			"\n" + user.getName()+" is now attending your potluck"+potluck.getName()+"!\n"+
+			"Warm regards, \n The potLucky team";
+		emailBean.sendEmail(potluck.getOwnerEmail(), "Potluck invitation accepted", message);
 	}
 
 	@Override
@@ -91,6 +110,11 @@ public class PotluckFacadeBean implements PotluckInterface {
 		}
 		potluck.getAttendingEmails().remove(user.getEmail());
 		potluck.getInvitedEmails().remove(user.getEmail());
+
+		String message = "Hello " + entityManager.find(UserEntity.class, potluck.getOwnerEmail()).getName() +
+			"\n" + user.getName()+" will not be attending your potluck"+potluck.getName()+".\n"+
+			"Warm regards, \n The potLucky team";
+		emailBean.sendEmail(potluck.getOwnerEmail(), "Potluck invitation rejected", message);
 	}
 
 	@Override
@@ -101,11 +125,22 @@ public class PotluckFacadeBean implements PotluckInterface {
 	@Override
 	public void commitToItem(String item, String email) {
 		potluck.getCommitedItems().put(item, email);
+		
+		String message = "Hello " + entityManager.find(UserEntity.class, potluck.getOwnerEmail()).getName() +
+			"\n" + entityManager.find(UserEntity.class, email).getName()+
+			" will bring "+ item + "to your potluck"+potluck.getName()+"!\n"+
+			"Warm regards, \n The potLucky team";
+		emailBean.sendEmail(potluck.getOwnerEmail(), "Potluck invitation accepted", message);
 	}
 
 	@Override
 	public void addRestriction(String restriction) {
 		potluck.getRestrictions().add(restriction);
+		for (UserEntity user : potluck.getusers.values()()){
+			String message = "Hello " + user.getName() +"\n Your potluck "+potluck.getName()+" has a new dietary restriction."+
+				"The new restriction is: " + restriction + "\n Warm regards, \n The potLucky team";
+			emailBean.sendEmail(user.getEmail(), "Potluck time and description added", message);
+		}
 	}
 
 	@Override
