@@ -84,6 +84,20 @@ public class PotluckBean implements Serializable {
 		return potluckManager.getRestrictions();
 	}
 	
+	public boolean userIsInvited() {
+		for (User user : potluckManager.getInvited()) {
+			if (user.getEmail().equals(sessionBean.getEmail())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public String acceptInvitation() {
+		potluckManager.acceptInvitation(sessionBean.getEmail());
+		return null;
+	}
+
 	private String inviteEmail;
 	
 	public String getInviteEmail() {
