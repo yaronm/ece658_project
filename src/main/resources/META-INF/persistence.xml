@@ -5,8 +5,8 @@
 	<persistence-unit name="PotLucky">
 		<description>Persistence unit for all PotLucky application data.</description>
 		<jta-data-source>java:comp/DefaultDataSource</jta-data-source>
-		<class>ca.uwaterloo.ece.ece658project.User</class>
-		<class>ca.uwaterloo.ece.ece658project.Potluck</class>
+		<class>ca.uwaterloo.ece.ece658project.entiry.User</class>
+		<class>ca.uwaterloo.ece.ece658project.entity.Potluck</class>
 		<properties>
 			<property name="javax.persistence.schema-generation.database.action"
 				value="drop-and-create" />

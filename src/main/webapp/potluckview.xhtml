@@ -7,10 +7,39 @@
 <ui:composition template="./template.xhtml">
 	<ui:define name="content">
 
+		<h2>
+			<h:outputText value="#{potluckBean.name}" />
+		</h2>
 		<p>
-			Viewing potluck
-			<h:outputText value="#{potluckBean.potluck.id}" />
+			<h:outputText value="#{potluckBean.description}" />
 		</p>
+
+		<h3>Time(s) and Date(s)</h3>
+		<h:dataTable value="#{potluckBean.events}" var="event">
+			<h:column>
+				<h:outputText value="#{event.title}" />
+			</h:column>
+			<h:column>
+				<h:outputText value="#{event.date.toString()}" />
+			</h:column>
+			<h:column>
+				<h:outputText value="#{event.description}" />
+			</h:column>
+		</h:dataTable>
+
+		<h3>People</h3>
+		<h4>Attending</h4>
+		<h:dataTable value="#{potluckBean.attending}" var="user">
+			<h:column>
+				<h:outputText value="#{user.name}" />
+			</h:column>
+		</h:dataTable>
+		<h4>Invited</h4>
+		<h:dataTable value="#{potluckBean.invited}" var="user">
+			<h:column>
+				<h:outputText value="#{user.name}" />
+			</h:column>
+		</h:dataTable>
 
 	</ui:define>
 </ui:composition>

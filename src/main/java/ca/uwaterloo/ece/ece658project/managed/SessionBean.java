@@ -1,4 +1,4 @@
-package ca.uwaterloo.ece.ece658project;
+package ca.uwaterloo.ece.ece658project.managed;
 
 import java.io.Serializable;
 
@@ -10,14 +10,14 @@ import javax.inject.Named;
 @SuppressWarnings("serial")
 public class SessionBean implements Serializable {
 
-	private User user;
+	private String email;
 
-	public User getUser() {
-		return user;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	
 }

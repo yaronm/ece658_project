@@ -1,8 +1,10 @@
-package ca.uwaterloo.ece.ece658project;
+package ca.uwaterloo.ece.ece658project.managed;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 import javax.validation.constraints.NotNull;
+
+import ca.uwaterloo.ece.ece658project.exception.LoginException;
 
 @Named
 @SessionScoped
@@ -25,8 +27,8 @@ public class UserCreateBean extends UserLoginBean {
 
 	public String create() {
 		try {
-			User user = userManager.createUser(getName(), getEmail());
-			sessionBean.setUser(user);
+			userManager.createUser(getName(), getEmail());
+			sessionBean.setEmail(getEmail());
 			return "success";
 		} catch (LoginException e) {
 			error(e.getMessage());

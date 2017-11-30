@@ -1,4 +1,4 @@
-package ca.uwaterloo.ece.ece658project;
+package ca.uwaterloo.ece.ece658project.managed;
 
 import java.io.Serializable;
 

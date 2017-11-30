@@ -1,10 +1,17 @@
 package ca.uwaterloo.ece.ece658project;
 
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.logging.Logger;
 
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
+import ca.uwaterloo.ece.ece658project.entity.PotluckEntity;
+import ca.uwaterloo.ece.ece658project.entity.UserEntity;
+import ca.uwaterloo.ece.ece658project.exception.LoginException;
+import ca.uwaterloo.ece.ece658project.interfaces.User;
 
 @Stateful
 public class UserManagerBean {
@@ -14,32 +21,37 @@ public class UserManagerBean {
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	public User createUser(String name, String email) throws LoginException {
+	public void createUser(String name, String email) throws LoginException {
 		logger.info("Create user: " + name + " <" + email + ">");
 
 		// check if a user already exists with the given email
-		User existingUser = entityManager.find(User.class, email);
+		UserEntity existingUser = entityManager.find(UserEntity.class, email);
 		if (existingUser != null) {
 			throw new LoginException("A user with that email already exists");
 		}
 
 		// if not, create a new user
-		User user = new User(name, email);
+		UserEntity user = new UserEntity(name, email);
 		entityManager.persist(user);
-		return user;
 	}
 
-	public User login(String email) throws LoginException {
+	public User getUser(String email) {
+		UserEntity user = entityManager.find(UserEntity.class, email);
+		Collection<Long> potlucks = new LinkedList<>();
+		for (PotluckEntity potluck : user.getPotlucks()) {
+			potlucks.add(potluck.getId());
+		}
+		return new User(user.getName(), user.getEmail(), potlucks);
+	}
+
+	public void login(String email) throws LoginException {
 		logger.info("Login: " + email);
 
 		// check that a user exists with the given email
-		User user = entityManager.find(User.class, email);
+		UserEntity user = entityManager.find(UserEntity.class, email);
 		if (user == null) {
 			throw new LoginException("Invalid login credentials");
 		}
-		
-		// if so, return that user
-		return user;
 	}
-
+	
 }

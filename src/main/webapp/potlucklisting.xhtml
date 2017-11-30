@@ -9,21 +9,18 @@
 	<ui:define name="content">
 
 		<h:form>
-			<h:dataTable value="#{potluckListingBean.potlucks}" var="potluck">
+			<h:dataTable value="#{potluckListingBean.potlucks}" var="id">
 				<h:column>
-					<h:commandLink action="#{potluckListingBean.view(potluck)}">View</h:commandLink>
+					<h:commandLink action="#{potluckListingBean.view(id)}">View</h:commandLink>
 				</h:column>
 				<h:column>
-					<h:commandLink action="#{potluckListingBean.edit(potluck)}">Edit</h:commandLink>
+					<h:commandLink action="#{potluckListingBean.edit(id)}">Edit</h:commandLink>
 				</h:column>
 				<h:column>
-					<h:outputText value="#{potluck.id}" />
+					<h:outputText value="#{potluckListingBean.potluckNames.get(id)}" />
 				</h:column>
 				<h:column>
-					<h:outputText value="#{potluck.owner.name}" />
-				</h:column>
-				<h:column>
-					<h:outputText value="#{potluck.description}" />
+					<h:outputText value="#{potluckListingBean.potluckDescriptions.get(id)}" />
 				</h:column>
 			</h:dataTable>
 		</h:form>
