@@ -11,6 +11,17 @@
 
 <h:body>
 	<h1>PotLucky</h1>
+	<h:form rendered="#{sessionBean.isLoggedIn()}">
+		<p>
+			Hello,
+			<h:outputText value="#{sessionBean.user.name}" />
+			(Not
+			<h:outputText value="#{sessionBean.user.name}" />
+			-
+			<h:commandLink action="#{sessionBean.logout}">Logout</h:commandLink>
+			)
+		</p>
+	</h:form>
 	<hr />
 	<ui:insert name="content" />
 </h:body>
