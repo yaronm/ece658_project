@@ -63,9 +63,9 @@ public class PotluckFacadeBean implements PotluckInterface {
 		potluck.getEventDescriptions().put(event.getTitle(), event.getDescription());
 		entityManager.merge(potluck);
 		for (UserEntity user : potluck.getUsers().values()){
-			String message = "Hello " + user.getName() +"\n Your potluck "+potluck.getName()+" has a new time and description."+
-				"The new description is: \n "+event.getTitle()+": "+ event.getDescription()+
-				"\n and the new time is: \n" + event.getDate()+"\n Warm regards, \n The potLucky team";
+			String message = "Hello " + user.getName() +"\n\nYour potluck "+potluck.getName()+" has a new time and description."+
+				" The new description is: \n"+event.getTitle()+": "+ event.getDescription()+
+				"\nAnd the new time is: \n" + event.getDate()+"\n\nWarm regards, \nThe PotLucky Team";
 			emailBean.sendEmail(user.getEmail(), "Potluck time and description added", message);
 		}
 	}
@@ -80,9 +80,9 @@ public class PotluckFacadeBean implements PotluckInterface {
 		potluck.getAttendingEmails().remove(user.getEmail());
 		potluck.getInvitedEmails().add(user.getEmail());
 		entityManager.merge(potluck);
-		String message = "Hello " + user.getName() +"\nYou have been invited to a new potluck!\n"+
+		String message = "Hello " + user.getName() +"\n\nYou have been invited to a new potluck!\n"+
 			"The potluck was created by " + entityManager.find(UserEntity.class, potluck.getOwnerEmail()).getName() +
-			"\nPlease log in to your account to view the potluck details.\nWarm regards, \n The potLucky team";
+			"\nPlease log in to your account to view the potluck details.\n\nWarm regards, \nThe PotLucky Team";
 		emailBean.sendEmail(email, "Potluck invitation", message);
 	}
 
@@ -98,8 +98,8 @@ public class PotluckFacadeBean implements PotluckInterface {
 		entityManager.merge(potluck);
 		
 		String message = "Hello " + entityManager.find(UserEntity.class, potluck.getOwnerEmail()).getName() +
-			"\n" + user.getName()+" is now attending your potluck"+potluck.getName()+"!\n"+
-			"Warm regards, \n The potLucky team";
+			"\n\n" + user.getName()+" is now attending your potluck "+potluck.getName()+"!\n\n"+
+			"Warm regards, \nThe PotLucky Team";
 		emailBean.sendEmail(potluck.getOwnerEmail(), "Potluck invitation accepted", message);
 	}
 
@@ -115,8 +115,8 @@ public class PotluckFacadeBean implements PotluckInterface {
 		entityManager.merge(potluck);
 
 		String message = "Hello " + entityManager.find(UserEntity.class, potluck.getOwnerEmail()).getName() +
-			",\n" + user.getName()+" will not be attending your potluck "+potluck.getName()+".\n"+
-			"Warm regards, \n The potLucky team";
+			",\n\n" + user.getName()+" will not be attending your potluck "+potluck.getName()+".\n\n"+
+			"Warm regards, \nThe PotLucky Team";
 		emailBean.sendEmail(potluck.getOwnerEmail(), "Potluck invitation rejected", message);
 	}
 
@@ -132,9 +132,9 @@ public class PotluckFacadeBean implements PotluckInterface {
 		entityManager.merge(potluck);
 		
 		String message = "Hello " + entityManager.find(UserEntity.class, potluck.getOwnerEmail()).getName() +
-			",\n" + entityManager.find(UserEntity.class, email).getName()+
-			" will bring "+ item + " to your potluck"+potluck.getName()+"!\n"+
-			"Warm regards, \n The potLucky team";
+			",\n\n" + entityManager.find(UserEntity.class, email).getName()+
+			" will bring "+ item + " to your potluck "+potluck.getName()+"!\n\n"+
+			"Warm regards, \nThe PotLucky Team";
 		emailBean.sendEmail(potluck.getOwnerEmail(), "Potluck item committed", message);
 	}
 
@@ -143,8 +143,8 @@ public class PotluckFacadeBean implements PotluckInterface {
 		potluck.getRestrictions().add(restriction);
 		entityManager.merge(potluck);
 		for (UserEntity user : potluck.getUsers().values()){
-			String message = "Hello " + user.getName() +",\n Your potluck "+potluck.getName()+" has a new dietary restriction.\n"+
-				"The new restriction is: " + restriction + "\n Warm regards, \n The potLucky team";
+			String message = "Hello " + user.getName() +",\n\nYour potluck "+potluck.getName()+" has a new dietary restriction.\n"+
+				"The new restriction is: " + restriction + "\n\nWarm regards, \nThe PotLucky Team";
 			emailBean.sendEmail(user.getEmail(), "Potluck dietary restriction added", message);
 		}
 	}

@@ -14,7 +14,6 @@ import ca.uwaterloo.ece.ece658project.entity.UserEntity;
 import ca.uwaterloo.ece.ece658project.exception.LoginException;
 import ca.uwaterloo.ece.ece658project.interfaces.User;
 
-
 @Stateful
 public class UserManagerBean {
 
@@ -22,8 +21,8 @@ public class UserManagerBean {
 
 	@PersistenceContext
 	private EntityManager entityManager;
-	
-	@EJB 
+
+	@EJB
 	private NotificationSystemBean emailBean;
 
 	public void createUser(String name, String email) throws LoginException {
@@ -38,7 +37,8 @@ public class UserManagerBean {
 		// if not, create a new user
 		UserEntity user = new UserEntity(name, email);
 		entityManager.persist(user);
-		String message = "Hello " + name +"\n you have created a new potluck account. We hope you have great get togethers. \n Warm regards, \n The potLucky team";
+		String message = "Hello " + name
+				+ "\n\nYou have created a new potluck account. We hope you have great get togethers. \n\nWarm regards, \nThe PotLucky Team";
 		emailBean.sendEmail(email, "Potluck user created", message);
 
 	}
@@ -64,5 +64,5 @@ public class UserManagerBean {
 			throw new LoginException("Invalid login credentials");
 		}
 	}
-	
+
 }
