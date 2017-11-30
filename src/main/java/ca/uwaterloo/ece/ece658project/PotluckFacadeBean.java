@@ -58,6 +58,7 @@ public class PotluckFacadeBean implements PotluckInterface {
 	public void schedule(Event event) {
 		potluck.getEventTimes().put(event.getTitle(), event.getDate());
 		potluck.getEventDescriptions().put(event.getTitle(), event.getDescription());
+		entityManager.merge(potluck);
 	}
 
 	@Override
@@ -69,6 +70,7 @@ public class PotluckFacadeBean implements PotluckInterface {
 		potluck.getUsers().put(user.getEmail(), user);
 		potluck.getAttendingEmails().remove(user.getEmail());
 		potluck.getInvitedEmails().add(user.getEmail());
+		entityManager.merge(potluck);
 	}
 
 	@Override
@@ -80,6 +82,7 @@ public class PotluckFacadeBean implements PotluckInterface {
 		potluck.getUsers().put(user.getEmail(), user);
 		potluck.getAttendingEmails().add(user.getEmail());
 		potluck.getInvitedEmails().remove(user.getEmail());
+		entityManager.merge(potluck);
 	}
 
 	@Override
@@ -91,21 +94,25 @@ public class PotluckFacadeBean implements PotluckInterface {
 		}
 		potluck.getAttendingEmails().remove(user.getEmail());
 		potluck.getInvitedEmails().remove(user.getEmail());
+		entityManager.merge(potluck);
 	}
 
 	@Override
 	public void addItem(String item) {
 		potluck.getNecessaryItems().add(item);
+		entityManager.merge(potluck);
 	}
 
 	@Override
 	public void commitToItem(String item, String email) {
 		potluck.getCommitedItems().put(item, email);
+		entityManager.merge(potluck);
 	}
 
 	@Override
 	public void addRestriction(String restriction) {
 		potluck.getRestrictions().add(restriction);
+		entityManager.merge(potluck);
 	}
 
 	@Override
@@ -161,7 +168,8 @@ public class PotluckFacadeBean implements PotluckInterface {
 
 	@Override
 	public Collection<String> getRestrictions() {
-		return potluck.getRestrictions();
+		Collection<String> restrictions = potluck.getRestrictions();
+		return restrictions;
 	}
 
 }
