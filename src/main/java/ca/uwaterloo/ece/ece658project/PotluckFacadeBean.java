@@ -2,6 +2,7 @@ package ca.uwaterloo.ece.ece658project;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -45,7 +46,25 @@ public class PotluckFacadeBean implements PotluckInterface {
 		entityManager.persist(potluck);
 		return potluck.getId();
 	}
+	
+	@Override
+	public void changePotluckName(String user_email, String name) {
+		if (!user_email.equals(potluck.getOwnerEmail())){
+			return;
+		}
+		potluck.setName(name);
+		entityManager.merge(potluck);
+	}
 
+	@Override
+	public void changePotluckDescription(String user_email, String description) {
+		if (!user_email.equals(potluck.getOwnerEmail())){
+			return;
+		}
+		potluck.setDescription(description);
+		entityManager.merge(potluck);
+	}
+	
 	@Override
 	public void selectPotluck(Long id) {
 		potluck = entityManager.find(PotluckEntity.class, id);
@@ -55,6 +74,43 @@ public class PotluckFacadeBean implements PotluckInterface {
 	public void deletePotluck(Long id) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	@Override
+	public void duplicatePotluck(String user_email) {
+		if (!user_email.equals(potluck.getOwnerEmail())){
+			return;
+		}
+		PotluckEntity old_potluck = entityManager.find(PotluckEntity.class, potluck.getId());
+		long new_potluck_id = createPotluck(potluck.getName(), potluck.getOwnerEmail(), potluck.getDescription());
+
+		
+		//add event_times && descriptions
+		 Map<String, String> descriptions = old_potluck.getEventDescriptions();
+		 Map<String, Date> times = old_potluck.getEventTimes();
+		 for (String tit : descriptions.keySet()) {
+			 Event event = new Event(tit, times.get(tit), descriptions.get(tit));
+			 this.schedule(event);
+		 }
+		
+		//add restrictions
+		Collection<String> rest = old_potluck.getRestrictions();
+		for(String r : rest) {
+			this.addRestriction(r);
+		}
+		
+		
+		//add necessary items
+		Collection<String> items_to_add = old_potluck.getNecessaryItems();
+		for (String it: items_to_add) {
+			this.addItem(it);
+		}
+		
+		//invite users
+		Map<String, UserEntity> to_invite = old_potluck.getUsers();
+		for (String inv : to_invite.keySet()) {
+			this.invite(inv);
+		}
 	}
 
 	@Override

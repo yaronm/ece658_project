@@ -11,6 +11,12 @@ public interface PotluckInterface {
 	
 	public void deletePotluck(Long id);
 	
+	public void duplicatePotluck(String user_email);
+	
+	public void changePotluckName(String user_email, String name);
+	
+	public void changePotluckDescription(String user_email, String description);
+	
 	public void schedule(Event event);
 
 	public void invite(String email);

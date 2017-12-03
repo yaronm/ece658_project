@@ -13,6 +13,20 @@
 		<p>
 			<h:outputText value="#{potluckBean.description}" />
 		</p>
+		
+		<h:form>
+			<h:outputLabel for="Change Name" value="New Name?" />
+			<h:inputText id="name" value="#{potluckBean.newName}" />
+			<h:commandButton value="Change" action="#{potluckBean.changeName}" />
+			<h:message for="name" />
+		</h:form>
+		
+		<h:form>
+			<h:outputLabel for="Change Description" value="New Description?" />
+			<h:inputText id="Description" value="#{potluckBean.newDescription}" />
+			<h:commandButton value="Change" action="#{potluckBean.changeDescription}" />
+			<h:message for="description" />
+		</h:form>
 
 		<h3>People</h3>
 		<h4>Attending</h4>
@@ -113,11 +127,13 @@
 			<h:commandButton value="Add" action="#{potluckBean.addRestriction}" />
 			<h:message for="restriction" />
 		</h:form>
-
+		<h:form>
+			<h:commandButton value = "Duplicate" action = "${potluckBean.duplicate}"/>
+		</h:form>
 		<h:form>
 			<h:commandLink action="potlucklisting">Back</h:commandLink>
 		</h:form>
-
+		
 	</ui:define>
 </ui:composition>
 

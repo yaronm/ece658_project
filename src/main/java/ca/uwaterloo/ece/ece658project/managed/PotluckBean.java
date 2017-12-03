@@ -42,6 +42,10 @@ public class PotluckBean implements Serializable {
 	public Long getPotluck() {
 		return potluck;
 	}
+	
+	public void duplicate() {
+		potluckManager.duplicatePotluck(sessionBean.getEmail());
+	}
 
 	public void setPotluck(Long id) {
 		this.potluck = id;
@@ -202,5 +206,37 @@ public class PotluckBean implements Serializable {
 		potluckManager.addRestriction(getNewRestriction());
 		return null;
 	}
+	
+	@NotNull
+	private String newName;
+	
+	public void setNewName(String newName) {
+		this.newName = newName;
+	}
+	
+	public String getNewName() {
+		return newName;
+	}
+	
+	public void changeName() {
+		potluckManager.changePotluckName(sessionBean.getEmail(),getNewName());
+	}
+	
+	@NotNull
+	private String newDescription;
+	
+	public void setNewDescription(String newDescription) {
+		this.newDescription = newDescription;
+	}
+	
+	public String getnewDescription() {
+		return newDescription;
+	}
+	
+	public void changeDescription() {
+		potluckManager.changePotluckDescription(sessionBean.getEmail(),getnewDescription());
+	}
+	
+	
 
 }
