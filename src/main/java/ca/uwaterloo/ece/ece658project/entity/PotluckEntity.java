@@ -56,6 +56,10 @@ public class PotluckEntity implements Serializable {
 	@ElementCollection(fetch=FetchType.EAGER)
 	private Collection<String> restrictions = new LinkedList<>();
 
+	@ElementCollection(fetch=FetchType.EAGER)
+	private Collection<Long> polls= new LinkedList<>();
+
+	
 	public PotluckEntity() {
 	}
 
@@ -105,6 +109,14 @@ public class PotluckEntity implements Serializable {
 
 	public void setAttendingEmails(Set<String> attendingEmails) {
 		this.attendingEmails = attendingEmails;
+	}
+	
+	public Collection<Long> getPolls() {
+		return polls;
+	}
+
+	public void setPolls(Collection<Long> polls) {
+		this.polls = polls;
 	}
 
 	public Set<String> getInvitedEmails() {

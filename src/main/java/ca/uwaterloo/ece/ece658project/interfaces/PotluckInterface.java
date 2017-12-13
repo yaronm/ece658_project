@@ -45,4 +45,12 @@ public interface PotluckInterface {
 	
 	public Collection<String> getRestrictions();
 
+	void removePoll(Long poll);
+
+	Collection<Long> getPolls();
+
+	void setPolls(Collection<Long> polls);
+
+	void addPoll(Long poll);
+
 }

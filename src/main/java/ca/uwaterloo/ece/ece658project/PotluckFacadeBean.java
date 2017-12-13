@@ -9,15 +9,19 @@ import java.util.Map;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import ca.uwaterloo.ece.ece658project.entity.PotluckEntity;
 import ca.uwaterloo.ece.ece658project.entity.UserEntity;
 import ca.uwaterloo.ece.ece658project.interfaces.Event;
+import ca.uwaterloo.ece.ece658project.interfaces.PollInterface;
 import ca.uwaterloo.ece.ece658project.interfaces.PotluckInterface;
 import ca.uwaterloo.ece.ece658project.interfaces.PotluckMetadata;
 import ca.uwaterloo.ece.ece658project.interfaces.User;
+import ca.uwaterloo.ece.ece658project.entity.PollEntity;
+
 
 @Stateful
 public class PotluckFacadeBean implements PotluckInterface {
@@ -27,6 +31,9 @@ public class PotluckFacadeBean implements PotluckInterface {
 
 	@EJB
 	private UserManagerBean userManager;
+	
+	@Inject
+	protected PollInterface pollManager;
 
 	private PotluckEntity potluck;
 
@@ -39,6 +46,7 @@ public class PotluckFacadeBean implements PotluckInterface {
 		potluck.setName(name);
 		potluck.setDescription(description);
 		potluck.setOwnerEmail(owner);
+
 		UserEntity user = entityManager.find(UserEntity.class, owner);
 		System.out.println("User: " + user);
 		potluck.getUsers().put(owner, user);
@@ -82,7 +90,7 @@ public class PotluckFacadeBean implements PotluckInterface {
 			return;
 		}
 		PotluckEntity old_potluck = entityManager.find(PotluckEntity.class, potluck.getId());
-		long new_potluck_id = createPotluck(potluck.getName(), potluck.getOwnerEmail(), potluck.getDescription());
+		Long new_potluck_id = createPotluck(potluck.getName(), potluck.getOwnerEmail(), potluck.getDescription());
 
 		
 		//add event_times && descriptions
@@ -106,11 +114,20 @@ public class PotluckFacadeBean implements PotluckInterface {
 			this.addItem(it);
 		}
 		
+		//add polls
+		Collection<Long> polls_to_add = old_potluck.getPolls();
+		for (Long it: polls_to_add) {
+			pollManager.selectPoll(it);
+			this.addPoll(pollManager.Duplicate(new_potluck_id));
+		}
+		
 		//invite users
 		Map<String, UserEntity> to_invite = old_potluck.getUsers();
 		for (String inv : to_invite.keySet()) {
 			this.invite(inv);
 		}
+		this.selectPotluck(old_potluck.getId());
+		
 	}
 
 	@Override
@@ -261,5 +278,35 @@ public class PotluckFacadeBean implements PotluckInterface {
 		Collection<String> restrictions = potluck.getRestrictions();
 		return restrictions;
 	}
+	
+	@Override
+	public Collection<Long> getPolls(){
+		Collection<Long> polls = potluck.getPolls();
+		return polls;
+	}
+
+	@Override
+	public void setPolls(Collection<Long> polls){
+		potluck.setPolls(polls);
+		entityManager.merge(potluck);
+	}
+	
+	@Override
+	public void addPoll(Long poll){
+		potluck.getPolls().add(poll);
+		
+		entityManager.merge(potluck);
+	}
+	
+	@Override
+	public void removePoll(Long poll){
+		Collection<Long> polls = potluck.getPolls();
+		polls.remove(poll);
+		potluck.setPolls(polls);
+		entityManager.merge(potluck);
+	}
+	
+
+	
 
 }

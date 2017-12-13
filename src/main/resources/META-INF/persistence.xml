@@ -7,6 +7,8 @@
 		<jta-data-source>java:comp/DefaultDataSource</jta-data-source>
 		<class>ca.uwaterloo.ece.ece658project.entity.User</class>
 		<class>ca.uwaterloo.ece.ece658project.entity.Potluck</class>
+		<class>ca.uwaterloo.ece.ece658project.entity.Poll</class>
+        <class>ca.uwaterloo.ece.ece658project.entity.PollOption</class>
 		<properties>
 			<property name="javax.persistence.schema-generation.database.action"
 				value="drop-and-create" />

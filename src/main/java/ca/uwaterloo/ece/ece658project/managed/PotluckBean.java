@@ -1,11 +1,15 @@
 package ca.uwaterloo.ece.ece658project.managed;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
@@ -14,8 +18,11 @@ import javax.inject.Named;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+import ca.uwaterloo.ece.ece658project.DatabaseInitialization;
 import ca.uwaterloo.ece.ece658project.UserManagerBean;
 import ca.uwaterloo.ece.ece658project.interfaces.Event;
+import ca.uwaterloo.ece.ece658project.interfaces.PollInterface;
+import ca.uwaterloo.ece.ece658project.interfaces.PollOptionInterface;
 import ca.uwaterloo.ece.ece658project.interfaces.PotluckInterface;
 import ca.uwaterloo.ece.ece658project.interfaces.User;
 
@@ -23,13 +30,20 @@ import ca.uwaterloo.ece.ece658project.interfaces.User;
 @SessionScoped
 @SuppressWarnings("serial")
 public class PotluckBean implements Serializable {
-
+	private static final Logger logger = Logger.getLogger(PotluckBean.class.getName());
 	@EJB
 	protected PotluckInterface potluckManager;
 
 	@EJB
 	protected UserManagerBean userManager;
+	
+	@EJB
+	protected PollInterface pollManager;
+	
+	@EJB
+	protected PollOptionInterface optionManager;
 
+	
 	@Inject
 	protected SessionBean sessionBean;
 
@@ -60,6 +74,21 @@ public class PotluckBean implements Serializable {
 		return potluckManager.getMetadata().getDescription();
 	}
 
+	public Collection<Map<String, String>> getPolls(){
+		Collection<Long> polls = potluckManager.getPolls();
+		Collection<Map<String,String>> poll_info = new LinkedList<Map<String,String>>();
+		for (Long poll : polls) {
+			Map<String,String> curr_poll = new HashMap<String, String>();
+			
+			pollManager.selectPoll(poll);
+			curr_poll.put("id", poll.toString());
+			curr_poll.put("Name", pollManager.getPollName());
+			curr_poll.put("Description", pollManager.getPollDescription());
+			poll_info.add(curr_poll);
+		}
+		return poll_info;
+	}
+	
 	public Collection<Event> getEvents() {
 		return potluckManager.getEvents();
 	}
@@ -237,6 +266,7 @@ public class PotluckBean implements Serializable {
 		potluckManager.changePotluckDescription(sessionBean.getEmail(),getnewDescription());
 	}
 	
+
 	
 
 }
