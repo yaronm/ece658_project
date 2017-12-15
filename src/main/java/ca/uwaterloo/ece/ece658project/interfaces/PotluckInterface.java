@@ -45,12 +45,40 @@ public interface PotluckInterface {
 	
 	public Collection<String> getRestrictions();
 
-	void removePoll(Long poll);
+	void removePoll();
 
 	Collection<Long> getPolls();
+	
+	void select_poll (Long pollId);
+	
+	void select_option (Long optionId);
 
 	void setPolls(Collection<Long> polls);
 
-	void addPoll(Long poll);
+	Long addPoll(String pollName, String pollDescription);
+	
+	public void changePollName(String user_email, String Name);
+	
+	public void changePollDescription( String user_email, String Description);
+	
+	public Collection<Long> getPollOptions();
+	
+	public String getPollName();
+
+	public String getPollDescription();
+	
+	public Long addOption(String option_desc);
+	
+	public void removeOption(String user_email);
+	
+	public void changeOptionDescription(String user_email, String Description);
+	
+	public void removeRespondent(String user_email);
+	
+	public void addRespondent(String user_email);
+	
+	public Collection<String> getRespondents();
+
+	public String getOptionDescription();
 
 }

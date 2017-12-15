@@ -14,18 +14,23 @@ import javax.inject.Named;
 import javax.validation.constraints.NotNull;
 import ca.uwaterloo.ece.ece658project.interfaces.PollInterface;
 import ca.uwaterloo.ece.ece658project.interfaces.PollOptionInterface;
+import ca.uwaterloo.ece.ece658project.interfaces.PotluckInterface;
 
 @Named
 @SessionScoped
 @SuppressWarnings("serial")
 public class PollBean implements Serializable {
 	private static final Logger logger = Logger.getLogger(PotluckBean.class.getName());
-	@EJB
+	/*@EJB
 	protected PollInterface pollManager;
 	
 	@EJB
 	protected PollOptionInterface optionManager;
-
+	 */
+	
+	@EJB
+	protected PotluckInterface potluckManager;
+	
 	@Inject
 	protected SessionBean sessionBean;
 	
@@ -42,15 +47,15 @@ public class PollBean implements Serializable {
 
 	public void setPoll(String id_s) {
 		this.poll = Long.valueOf(id_s);
-		pollManager.selectPoll(this.poll);
+		potluckManager.select_poll(this.poll);
 	}
 
 	public String getName() {
-		return pollManager.getPollName();
+		return potluckManager.getPollName();
 	}
 
 	public String getDescription() {
-		return pollManager.getPollDescription();
+		return potluckManager.getPollDescription();
 	}
 
 	private Collection<String> add_as_collection(String to_Add) {
@@ -61,16 +66,16 @@ public class PollBean implements Serializable {
 	
 	public Collection<Map<String, Collection<String>>> getOptions(String id){
 		this.poll = Long.valueOf(id);
-		pollManager.selectPoll(this.poll);
+		potluckManager.select_poll(this.poll);
 		logger.info("id = "+this.poll.toString());
 		Collection<Map<String, Collection<String>>> options = new LinkedList<>();
-		Collection<Long> option_ids = pollManager.getOptions();
+		Collection<Long> option_ids = potluckManager.getPollOptions();
 		for (Long option : option_ids) {
-			optionManager.selectOption(option);
+			potluckManager.select_option(option);
 			Map<String,Collection<String>> curr_option = new HashMap<>();
 			curr_option.put("id", add_as_collection(option.toString()));
-			curr_option.put("description", add_as_collection(optionManager.getDescription()));
-			curr_option.put("voters", optionManager.getRespondents());
+			curr_option.put("description", add_as_collection(potluckManager.getOptionDescription()));
+			curr_option.put("voters", potluckManager.getRespondents());
 			options.add(curr_option);
 		}
 		return options;
@@ -112,7 +117,7 @@ public class PollBean implements Serializable {
 	}
 	
 	public void addNewPollOption() {
-		optionManager.newOption(this.newPollDescription, this.poll);
+		potluckManager.addOption(this.newPollDescription);
 	}
 	
 	public void removePollOption() {
@@ -120,13 +125,13 @@ public class PollBean implements Serializable {
 	}
 	
 	public void voteForPollOption(Long option) {
-		optionManager.selectOption(option);
-		optionManager.addRespondent(this.sessionBean.getEmail());
+		potluckManager.select_option(option);
+		potluckManager.addRespondent(this.sessionBean.getEmail());
 	}
 	
 	public void unvoteForPollOption(Long option) {
-		optionManager.selectOption(option);
-		optionManager.removeRespondent(this.sessionBean.getEmail());
+		potluckManager.select_option(option);
+		potluckManager.removeRespondent(this.sessionBean.getEmail());
 	}
 
 }

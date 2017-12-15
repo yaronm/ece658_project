@@ -36,13 +36,13 @@ public class PotluckBean implements Serializable {
 
 	@EJB
 	protected UserManagerBean userManager;
-	
+/*	
 	@EJB
 	protected PollInterface pollManager;
 	
 	@EJB
 	protected PollOptionInterface optionManager;
-
+*/
 	
 	@Inject
 	protected SessionBean sessionBean;
@@ -80,10 +80,11 @@ public class PotluckBean implements Serializable {
 		for (Long poll : polls) {
 			Map<String,String> curr_poll = new HashMap<String, String>();
 			
-			pollManager.selectPoll(poll);
+			//pollManager.selectPoll(poll);
+			potluckManager.select_poll(poll);
 			curr_poll.put("id", poll.toString());
-			curr_poll.put("Name", pollManager.getPollName());
-			curr_poll.put("Description", pollManager.getPollDescription());
+			curr_poll.put("Name", potluckManager.getPollName());
+			curr_poll.put("Description", potluckManager.getPollDescription());
 			poll_info.add(curr_poll);
 		}
 		return poll_info;

@@ -36,6 +36,10 @@ public class PotluckFacadeBean implements PotluckInterface {
 	protected PollInterface pollManager;
 
 	private PotluckEntity potluck;
+	
+	private Long poll;
+	
+	private Long option;
 
 	@EJB
  	private NotificationSystemBean emailBean;
@@ -117,8 +121,8 @@ public class PotluckFacadeBean implements PotluckInterface {
 		//add polls
 		Collection<Long> polls_to_add = old_potluck.getPolls();
 		for (Long it: polls_to_add) {
-			pollManager.selectPoll(it);
-			this.addPoll(pollManager.Duplicate(new_potluck_id));
+			//pollManager.selectPoll(it);
+			pollManager.Duplicate(it, new_potluck_id);
 		}
 		
 		//invite users
@@ -292,18 +296,98 @@ public class PotluckFacadeBean implements PotluckInterface {
 	}
 	
 	@Override
-	public void addPoll(Long poll){
+	public Long addPoll(String pollName, String pollDescription){
+		poll = pollManager.createPoll(pollName, pollDescription, potluck.getId());
 		potluck.getPolls().add(poll);
 		
 		entityManager.merge(potluck);
+		return poll;
 	}
 	
 	@Override
-	public void removePoll(Long poll){
+	public void removePoll(){
 		Collection<Long> polls = potluck.getPolls();
 		polls.remove(poll);
 		potluck.setPolls(polls);
 		entityManager.merge(potluck);
+	}
+
+	@Override
+	public void changePollName(String user_email, String Name) {
+		pollManager.changeName(poll, user_email, Name);
+		
+	}
+
+	@Override
+	public void changePollDescription(String user_email, String Description) {
+		pollManager.changeDescription(poll, user_email, Description);
+		
+	}
+
+	@Override
+	public Collection<Long> getPollOptions() {
+		return pollManager.getOptions(poll);
+	}
+
+	@Override
+	public String getPollName() {
+		return pollManager.getPollName(poll);
+	}
+
+	@Override
+	public String getPollDescription() {
+		return pollManager.getPollDescription(poll);
+	}
+
+	@Override
+	public Long addOption(String option_desc) {
+		return pollManager.addOption(poll, option_desc);
+	}
+
+	@Override
+	public void removeOption(String user_email) {
+		pollManager.removeOption(poll, user_email, option);
+		
+	}
+
+	@Override
+	public void changeOptionDescription(String user_email, String Description) {
+		pollManager.changeOptionDescription(option, user_email, Description);
+		
+	}
+
+	@Override
+	public void removeRespondent(String user_email) {
+		pollManager.removeRespondent(option, user_email);
+		
+	}
+
+	@Override
+	public void addRespondent(String user_email) {
+		pollManager.addRespondent(option, user_email);
+		
+	}
+
+	@Override
+	public Collection<String> getRespondents() {
+		return pollManager.getRespondents(option);
+	}
+
+	@Override
+	public String getOptionDescription() {
+		return pollManager.getOptionDescription(option);
+	}
+
+	@Override
+	public void select_poll(Long pollId) {
+		this.poll = pollId;
+		
+	}
+
+	@Override
+	public void select_option(Long optionId) {
+		this.option = optionId;
+		
 	}
 	
 

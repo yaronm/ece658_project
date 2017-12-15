@@ -6,25 +6,24 @@ public interface PollOptionInterface {
 
 	public Long newOption(String optionDescription, Long pollId);
 	
-	public Long Duplicate(Long new_poll_id);
+	public Long Duplicate(Long option_id, Long new_poll_id);
 	
-	public void selectOption(Long id);
+	//public void selectOption(Long id);
 	
 	public void deleteOption(String user_email, Long id);
 	
-	public void changeDescription(String user_email, String Description);
+	public void changeDescription(Long option_id, String user_email, String Description);
 	
-	public void changePollId(String user_email, Long Id);
+	public void changePollId(Long option_id, String user_email, Long Id);
 	
-	public void removeRespondent(String user_email);
+	public void removeRespondent(Long option_id, String user_email);
 	
-	public void addRespondent(String user_email);
+	public void addRespondent(Long option_id, String user_email);
 	
-	public Collection<String> getRespondents();
+	public Collection<String> getRespondents(Long option_id);
 
-	public String getDescription();
+	public String getDescription(Long option_id);
 	
-	public Long getPollId();
+	public Long getPollId(Long option_id);
 
-	public Long getOptionId();
 }

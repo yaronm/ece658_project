@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -14,13 +15,13 @@ import ca.uwaterloo.ece.ece658project.entity.PollOptionEntity;
 import ca.uwaterloo.ece.ece658project.interfaces.PollOptionInterface;
 import ca.uwaterloo.ece.ece658project.OptionManagerBean;
 
-@Stateful
+@Stateless
 public class OptionManagerBean implements PollOptionInterface {
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	private PollOptionEntity option;
+	//private PollOptionEntity option;
 	
 	
 	@EJB
@@ -28,6 +29,7 @@ public class OptionManagerBean implements PollOptionInterface {
 
 	@Override
 	public Long newOption(String optionDescription, Long pollId) {
+		PollOptionEntity option;
 		option = new PollOptionEntity();
 		option.setOptionDescription(optionDescription);
 		option.setPollId(pollId);
@@ -39,15 +41,17 @@ public class OptionManagerBean implements PollOptionInterface {
 	}
 	
 	@Override
-	public Long Duplicate(Long new_poll_id) {
+	public Long Duplicate(Long option_id, Long new_poll_id) {
+		PollOptionEntity option;
+		option = entityManager.find(PollOptionEntity.class, option_id);
 		Long new_option_id = newOption(option.getOptionDescription(), new_poll_id);
 		return new_option_id; 
 	}
 	
-	@Override
+	/*@Override
 	public void selectOption(Long id) {
 		option = entityManager.find(PollOptionEntity.class, id);
-	}
+	}*/
 	
 	@Override
 	public void deleteOption(String user_email, Long id) {
@@ -56,7 +60,9 @@ public class OptionManagerBean implements PollOptionInterface {
 	
 	
 	@Override
-	public void changeDescription(String user_email, String Description) {
+	public void changeDescription(Long option_id, String user_email, String Description) {
+		PollOptionEntity option;
+		option = entityManager.find(PollOptionEntity.class, option_id);
 		PollEntity poll = entityManager.find(PollEntity.class, option.getPollId());
 		PotluckEntity potluck = entityManager.find(PotluckEntity.class, poll.getPotluckId());
 		if (!user_email.equals(potluck.getOwnerEmail())){
@@ -67,7 +73,9 @@ public class OptionManagerBean implements PollOptionInterface {
 	}
 	
 	@Override
-	public void changePollId(String user_email, Long Id) {
+	public void changePollId(Long option_id, String user_email, Long Id) {
+		PollOptionEntity option;
+		option = entityManager.find(PollOptionEntity.class, option_id);
 		PollEntity poll = entityManager.find(PollEntity.class, option.getPollId());
 		PotluckEntity potluck = entityManager.find(PotluckEntity.class, poll.getPotluckId());
 		if (!user_email.equals(potluck.getOwnerEmail())){
@@ -79,13 +87,17 @@ public class OptionManagerBean implements PollOptionInterface {
 	
 	
 	@Override
-	public Long getPollId() {
+	public Long getPollId(Long option_id) {
+		PollOptionEntity option;
+		option = entityManager.find(PollOptionEntity.class, option_id);
 		return option.getPollId();
 	}
 
 
 	@Override
-	public void removeRespondent(String user_email) {
+	public void removeRespondent(Long option_id, String user_email) {
+		PollOptionEntity option;
+		option = entityManager.find(PollOptionEntity.class, option_id);
 		Collection<String> respondents = option.getRespondents();
 		respondents.remove(user_email);
 		option.setRespondents(respondents);
@@ -94,7 +106,9 @@ public class OptionManagerBean implements PollOptionInterface {
 	}
 
 	@Override
-	public void addRespondent(String user_email) {		
+	public void addRespondent(Long option_id, String user_email) {
+		PollOptionEntity option;
+		option = entityManager.find(PollOptionEntity.class, option_id);
 		Collection<String> respondents = option.getRespondents();
 		if (respondents == null || respondents.isEmpty())
 		{
@@ -109,19 +123,23 @@ public class OptionManagerBean implements PollOptionInterface {
 	}
 
 	@Override
-	public Collection<String> getRespondents() {
+	public Collection<String> getRespondents(Long option_id) {
+		PollOptionEntity option;
+		option = entityManager.find(PollOptionEntity.class, option_id);
 		return option.getRespondents();
 	}
 
 	@Override
-	public String getDescription() {
+	public String getDescription(Long option_id) {
+		PollOptionEntity option;
+		option = entityManager.find(PollOptionEntity.class, option_id);
 		return option.getOptionDescription();
 	}
 
 
-	@Override
+	/*@Override
 	public Long getOptionId() {
 
 		return option.getId();
-	}
+	}*/
 }
