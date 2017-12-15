@@ -10,7 +10,7 @@ public interface PollInterface {
 	
 	//public void selectPoll(Long id);
 	
-	public void deletePoll(String user_email, Long id);
+	public void deletePoll(Long id);
 	
 	public void changeName(Long pollId, String user_email, String Name);
 	

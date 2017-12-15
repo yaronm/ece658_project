@@ -20,7 +20,6 @@ import ca.uwaterloo.ece.ece658project.interfaces.PollInterface;
 import ca.uwaterloo.ece.ece658project.interfaces.PotluckInterface;
 import ca.uwaterloo.ece.ece658project.interfaces.PotluckMetadata;
 import ca.uwaterloo.ece.ece658project.interfaces.User;
-import ca.uwaterloo.ece.ece658project.entity.PollEntity;
 
 
 @Stateful
@@ -83,9 +82,21 @@ public class PotluckFacadeBean implements PotluckInterface {
 	}
 
 	@Override
-	public void deletePotluck(Long id) {
-		// TODO Auto-generated method stub
-
+	public void deletePotluck(String user_email) {
+		if (!user_email.equals(potluck.getOwnerEmail())){
+			return;
+		}
+		Map<String, UserEntity> users = potluck.getUsers();
+		for (String user : users.keySet()) {
+			UserEntity user_entity = entityManager.find(UserEntity.class, user);
+			Collection<PotluckEntity> potlucks = user_entity.getPotlucks();
+			while (potlucks.contains(potluck))
+				potlucks.remove(potluck);
+			user_entity.setPotlucks(potlucks);
+			entityManager.merge(user_entity);
+		}
+		entityManager.remove(potluck);
+		entityManager.flush();
 	}
 	
 	@Override
@@ -305,11 +316,17 @@ public class PotluckFacadeBean implements PotluckInterface {
 	}
 	
 	@Override
-	public void removePoll(){
+	public void removePoll(String user_email){
+		if (!user_email.equals(potluck.getOwnerEmail())){
+			return;
+		}
 		Collection<Long> polls = potluck.getPolls();
-		polls.remove(poll);
+		while (polls.contains(poll))
+			polls.remove(poll);
 		potluck.setPolls(polls);
 		entityManager.merge(potluck);
+		
+		pollManager.deletePoll(poll);
 	}
 
 	@Override

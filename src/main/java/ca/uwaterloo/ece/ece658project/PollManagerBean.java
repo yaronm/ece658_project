@@ -1,12 +1,9 @@
 package ca.uwaterloo.ece.ece658project;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
 import javax.ejb.EJB;
-import javax.ejb.Stateful;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -14,7 +11,6 @@ import ca.uwaterloo.ece.ece658project.entity.PotluckEntity;
 import ca.uwaterloo.ece.ece658project.entity.PollEntity;
 import ca.uwaterloo.ece.ece658project.interfaces.PollInterface;
 import ca.uwaterloo.ece.ece658project.interfaces.PollOptionInterface;
-import ca.uwaterloo.ece.ece658project.interfaces.PotluckInterface;
 import ca.uwaterloo.ece.ece658project.PollManagerBean;
 
 @Stateless
@@ -87,10 +83,12 @@ public class PollManagerBean implements PollInterface {
 	}*/
 	
 	@Override
-	public void deletePoll(String user_email, Long id) {
+	public void deletePoll(Long id) {
 		PollEntity poll;
 		poll = entityManager.find(PollEntity.class, id);
-		// TODO Auto-generated method stub
+		
+		entityManager.remove(poll);
+		entityManager.flush();
 	}
 	
 	@Override
@@ -150,7 +148,7 @@ public class PollManagerBean implements PollInterface {
 		if (!user_email.equals(potluck.getOwnerEmail())){
 			return;
 		}
-		optionManager.deleteOption(user_email, option);
+		optionManager.deleteOption(option);
 		Collection<Long> updated_options = new LinkedList<Long>(poll.getOptions());
 		updated_options.remove(option);
 		poll.setOptions(updated_options);

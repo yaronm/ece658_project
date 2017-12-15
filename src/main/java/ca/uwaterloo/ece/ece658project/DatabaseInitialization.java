@@ -75,7 +75,12 @@ public class DatabaseInitialization {
 					logger.info(r+"\n");
 				}
 			}
-			
+			potluckManager.removePoll("yaronm93@gmail.com");
+			for (Long poll : potluckManager.getPolls()) {
+				potluckManager.select_poll(poll);
+				logger.info(potluckManager.getPollName()+"\n");
+			}
+			potluckManager.deletePotluck("yaronm93@gmail.com");
 			//potluckManager.duplicatePotluck("yaronm93@gmail.com");
 			//potluckManager.duplicatePotluck("yaronm@rogers.com");
 		} catch (LoginException e) {

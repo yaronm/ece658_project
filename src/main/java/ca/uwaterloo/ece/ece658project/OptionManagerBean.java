@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import javax.ejb.EJB;
-import javax.ejb.Stateful;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -54,8 +53,11 @@ public class OptionManagerBean implements PollOptionInterface {
 	}*/
 	
 	@Override
-	public void deleteOption(String user_email, Long id) {
-		// TODO Auto-generated method stub
+	public void deleteOption(Long id) {
+		PollOptionEntity option = entityManager.find(PollOptionEntity.class, id);
+		entityManager.remove(option);
+		entityManager.flush();
+		
 	}
 	
 	

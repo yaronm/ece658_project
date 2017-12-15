@@ -10,7 +10,7 @@ public interface PollOptionInterface {
 	
 	//public void selectOption(Long id);
 	
-	public void deleteOption(String user_email, Long id);
+	public void deleteOption(Long id);
 	
 	public void changeDescription(Long option_id, String user_email, String Description);
 	

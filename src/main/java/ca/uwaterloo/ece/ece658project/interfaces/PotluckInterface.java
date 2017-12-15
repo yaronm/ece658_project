@@ -9,7 +9,7 @@ public interface PotluckInterface {
 	
 	public void selectPotluck(Long id);
 	
-	public void deletePotluck(Long id);
+	public void deletePotluck(String user_email);
 	
 	public void duplicatePotluck(String user_email);
 	
@@ -45,7 +45,7 @@ public interface PotluckInterface {
 	
 	public Collection<String> getRestrictions();
 
-	void removePoll();
+	void removePoll(String user_email);
 
 	Collection<Long> getPolls();
 	
