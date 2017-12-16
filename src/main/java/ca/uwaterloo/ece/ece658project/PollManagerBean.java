@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 
 import ca.uwaterloo.ece.ece658project.entity.PotluckEntity;
 import ca.uwaterloo.ece.ece658project.entity.PollEntity;
+import ca.uwaterloo.ece.ece658project.entity.PollOptionEntity;
 import ca.uwaterloo.ece.ece658project.interfaces.PollInterface;
 import ca.uwaterloo.ece.ece658project.interfaces.PollOptionInterface;
 import ca.uwaterloo.ece.ece658project.PollManagerBean;
@@ -38,20 +39,8 @@ public class PollManagerBean implements PollInterface {
 		poll.setPotluckId(potluckId);
 
 		entityManager.persist(poll);
-		PotluckEntity potluck;
-		potluck = entityManager.find(PotluckEntity.class, potluckId);
 		Long poll_id = poll.getId();
-		Collection<Long> polls = potluck.getPolls();
-		if (polls == null || polls.isEmpty())
-		{
-			Collection<Long> to_add = new LinkedList<Long>();
-			to_add.add(poll_id);
-			potluck.setPolls(to_add);
-		}else{
-			potluck.getPolls().add(poll_id);
-		}
 
-		entityManager.merge(potluck);
 		
 
 		return poll_id;
@@ -86,7 +75,12 @@ public class PollManagerBean implements PollInterface {
 	public void deletePoll(Long id) {
 		PollEntity poll;
 		poll = entityManager.find(PollEntity.class, id);
-		
+		Collection<Long> options = poll.getOptions();
+		for (Long op: options) {
+			PollOptionEntity option = entityManager.find(PollOptionEntity.class, op);
+			entityManager.remove(option);
+		}
+			
 		entityManager.remove(poll);
 		entityManager.flush();
 	}

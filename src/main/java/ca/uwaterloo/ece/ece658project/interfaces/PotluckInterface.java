@@ -11,7 +11,7 @@ public interface PotluckInterface {
 	
 	public void deletePotluck(String user_email);
 	
-	public void duplicatePotluck(String user_email);
+	public Long duplicatePotluck(String user_email);
 	
 	public void changePotluckName(String user_email, String name);
 	

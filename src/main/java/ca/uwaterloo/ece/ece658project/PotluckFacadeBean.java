@@ -95,14 +95,19 @@ public class PotluckFacadeBean implements PotluckInterface {
 			user_entity.setPotlucks(potlucks);
 			entityManager.merge(user_entity);
 		}
+		Collection<Long> polls = potluck.getPolls();
+		for (Long poll :polls) {
+			this.select_poll(poll);
+			this.removePoll(user_email);
+		}
 		entityManager.remove(potluck);
 		entityManager.flush();
 	}
 	
 	@Override
-	public void duplicatePotluck(String user_email) {
+	public Long duplicatePotluck(String user_email) {
 		if (!user_email.equals(potluck.getOwnerEmail())){
-			return;
+			return null;
 		}
 		PotluckEntity old_potluck = entityManager.find(PotluckEntity.class, potluck.getId());
 		Long new_potluck_id = createPotluck(potluck.getName(), potluck.getOwnerEmail(), potluck.getDescription());
@@ -142,7 +147,7 @@ public class PotluckFacadeBean implements PotluckInterface {
 			this.invite(inv);
 		}
 		this.selectPotluck(old_potluck.getId());
-		
+		return new_potluck_id;
 	}
 
 	@Override
