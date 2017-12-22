@@ -2,7 +2,7 @@ package ca.uwaterloo.ece.ece658project.interfaces;
 
 import java.util.Collection;
 
-public interface PollOptionInterface {
+public interface IOption {
 
 	public Long newOption(String optionDescription, Long pollId);
 	

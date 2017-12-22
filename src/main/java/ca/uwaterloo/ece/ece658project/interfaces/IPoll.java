@@ -2,7 +2,7 @@ package ca.uwaterloo.ece.ece658project.interfaces;
 
 import java.util.Collection;
 
-public interface PollInterface {
+public interface IPoll {
 
 	public Long createPoll(String pollName, String pollDescription, Long potluckId);
 	
