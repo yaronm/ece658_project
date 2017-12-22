@@ -36,12 +36,12 @@ public class DatabaseInitialization {
 	
 	@PostConstruct
 	public void initializeDatabase() {
-		try {
-			logger.info("initializing database");
+		//try {
+			logger.info("initializing database");/*
 			// create users
 			String yaron, user1;
 			yaron = "yaronm93@gmail.com";
-			userManager.createUser("yaron milwid", yaron);
+			userManager.createUser("yaron milwid", yaron, "test", 1);
 			// create potlucks
 			Long potluck1, potluck2;
 			potluck1 = potluckManager.createPotluck("First Potluck", yaron, "My first potluck!");
@@ -86,11 +86,11 @@ public class DatabaseInitialization {
 			for (Long poll : potluckManager.getPolls()) {
 				potluckManager.select_poll(poll);
 				logger.info(potluckManager.getPollName()+"\n");
-			}
+			}*/
 			//potluckManager.duplicatePotluck("yaronm@rogers.com");
-		} catch (LoginException e) {
-			logger.log(Level.SEVERE, e.getMessage(), e);
-		}
+		//} catch (LoginException e) {
+		//	logger.log(Level.SEVERE, e.getMessage(), e);
+		//}
 	}
 
 }

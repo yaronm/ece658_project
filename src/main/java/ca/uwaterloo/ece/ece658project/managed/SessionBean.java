@@ -6,6 +6,12 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.config.IniSecurityManagerFactory;
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.Factory;
+
 import ca.uwaterloo.ece.ece658project.UserManagerBean;
 import ca.uwaterloo.ece.ece658project.interfaces.User;
 
@@ -18,7 +24,12 @@ public class SessionBean implements Serializable {
 	private UserManagerBean userManager;
 
 	private String email;
-
+	public SessionBean() {
+		Factory<SecurityManager> factory = new IniSecurityManagerFactory("classpath:shiro.ini");
+		SecurityManager securityManager = factory.getInstance();
+		SecurityUtils.setSecurityManager(securityManager);
+	}
+	
 	public String getEmail() {
 		return email;
 	}
@@ -32,12 +43,15 @@ public class SessionBean implements Serializable {
 	}
 
 	public boolean isLoggedIn() {
-		return getEmail() != null;
+		return SecurityUtils.getSubject().isAuthenticated();
 	}
 
 	public String logout() {
 		setEmail(null);
-		return "index";
+		Subject currentUser = SecurityUtils.getSubject();
+		currentUser.logout();
+		
+		return "/index";
 	}
 
 }

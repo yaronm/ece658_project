@@ -24,6 +24,8 @@ public class UserLoginBean extends AbstractBean {
 	@NotNull
 	@Pattern(regexp = "^[A-Za-z0-9._]+@[A-Za-z0-9.-]+$")
 	private String email;
+	
+	private String password;
 
 	public UserLoginBean() {
 	}
@@ -35,10 +37,18 @@ public class UserLoginBean extends AbstractBean {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+	public String getPassword() {
+		return password;
+	}
+	
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
 	public String login() {
 		try {
-			userManager.login(getEmail());
+			userManager.login(getEmail(), getPassword());
 			sessionBean.setEmail(getEmail());
 			return "success";
 		} catch (LoginException e) {
