@@ -3,6 +3,8 @@ package ca.uwaterloo.ece.ece658project.interfaces;
 import java.util.Collection;
 import java.util.Map;
 
+import ca.uwaterloo.ece.ece658project.entity.UserEntity;
+
 public interface PotluckInterface {
 
 	public Long createPotluck(String name, String owner, String description);
@@ -80,5 +82,7 @@ public interface PotluckInterface {
 	public Collection<String> getRespondents();
 
 	public String getOptionDescription();
+
+	Map<String, UserEntity> getUsers();
 
 }

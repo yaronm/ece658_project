@@ -412,6 +412,11 @@ public class PotluckFacadeBean implements PotluckInterface {
 		
 	}
 	
+	@Override
+	public Map<String, UserEntity> getUsers(){
+		return potluck.getUsers();
+	}
+	
 
 	
 

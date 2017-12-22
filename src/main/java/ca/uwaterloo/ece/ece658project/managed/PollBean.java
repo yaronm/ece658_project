@@ -12,9 +12,9 @@ import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.validation.constraints.NotNull;
-import ca.uwaterloo.ece.ece658project.interfaces.PollInterface;
-import ca.uwaterloo.ece.ece658project.interfaces.PollOptionInterface;
-import ca.uwaterloo.ece.ece658project.interfaces.PotluckInterface;
+
+import ca.uwaterloo.ece.ece658project.exception.LoginException;
+import ca.uwaterloo.ece.ece658project.interfaces.AuthenticatedPotluckInterface;
 
 @Named
 @SessionScoped
@@ -29,7 +29,7 @@ public class PollBean implements Serializable {
 	 */
 	
 	@EJB
-	protected PotluckInterface potluckManager;
+	protected AuthenticatedPotluckInterface potluckManager;
 	
 	@Inject
 	protected SessionBean sessionBean;
@@ -45,16 +45,16 @@ public class PollBean implements Serializable {
 	}
 
 
-	public void setPoll(String id_s) {
+	public void setPoll(String id_s) throws LoginException {
 		this.poll = Long.valueOf(id_s);
 		potluckManager.select_poll(this.poll);
 	}
 
-	public String getName() {
+	public String getName() throws LoginException {
 		return potluckManager.getPollName();
 	}
 
-	public String getDescription() {
+	public String getDescription() throws LoginException {
 		return potluckManager.getPollDescription();
 	}
 
@@ -64,7 +64,7 @@ public class PollBean implements Serializable {
 		return col_to_add;
 	}
 	
-	public Collection<Map<String, Collection<String>>> getOptions(String id){
+	public Collection<Map<String, Collection<String>>> getOptions(String id) throws LoginException{
 		this.poll = Long.valueOf(id);
 		potluckManager.select_poll(this.poll);
 		logger.info("id = "+this.poll.toString());
@@ -116,7 +116,7 @@ public class PollBean implements Serializable {
 		this.newPollOption = newPollOption;
 	}
 	
-	public void addNewPollOption() {
+	public void addNewPollOption() throws LoginException {
 		potluckManager.addOption(this.newPollDescription);
 	}
 	
@@ -124,12 +124,12 @@ public class PollBean implements Serializable {
 		//TODO
 	}
 	
-	public void voteForPollOption(Long option) {
+	public void voteForPollOption(Long option) throws LoginException {
 		potluckManager.select_option(option);
 		potluckManager.addRespondent(this.sessionBean.getEmail());
 	}
 	
-	public void unvoteForPollOption(Long option) {
+	public void unvoteForPollOption(Long option) throws LoginException {
 		potluckManager.select_option(option);
 		potluckManager.removeRespondent(this.sessionBean.getEmail());
 	}

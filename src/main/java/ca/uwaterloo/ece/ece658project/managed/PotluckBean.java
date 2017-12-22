@@ -20,6 +20,8 @@ import javax.validation.constraints.Pattern;
 
 import ca.uwaterloo.ece.ece658project.DatabaseInitialization;
 import ca.uwaterloo.ece.ece658project.UserManagerBean;
+import ca.uwaterloo.ece.ece658project.exception.LoginException;
+import ca.uwaterloo.ece.ece658project.interfaces.AuthenticatedPotluckInterface;
 import ca.uwaterloo.ece.ece658project.interfaces.Event;
 import ca.uwaterloo.ece.ece658project.interfaces.PollInterface;
 import ca.uwaterloo.ece.ece658project.interfaces.PollOptionInterface;
@@ -32,7 +34,7 @@ import ca.uwaterloo.ece.ece658project.interfaces.User;
 public class PotluckBean implements Serializable {
 	private static final Logger logger = Logger.getLogger(PotluckBean.class.getName());
 	@EJB
-	protected PotluckInterface potluckManager;
+	protected AuthenticatedPotluckInterface potluckManager;
 
 	@EJB
 	protected UserManagerBean userManager;
@@ -57,24 +59,24 @@ public class PotluckBean implements Serializable {
 		return potluck;
 	}
 	
-	public void duplicate() {
+	public void duplicate() throws LoginException {
 		potluckManager.duplicatePotluck(sessionBean.getEmail());
 	}
 
-	public void setPotluck(Long id) {
+	public void setPotluck(Long id) throws LoginException {
 		this.potluck = id;
 		potluckManager.selectPotluck(id);
 	}
 
-	public String getName() {
+	public String getName() throws LoginException {
 		return potluckManager.getMetadata().getName();
 	}
 
-	public String getDescription() {
+	public String getDescription() throws LoginException {
 		return potluckManager.getMetadata().getDescription();
 	}
 
-	public Collection<Map<String, String>> getPolls(){
+	public Collection<Map<String, String>> getPolls() throws LoginException{
 		Collection<Long> polls = potluckManager.getPolls();
 		Collection<Map<String,String>> poll_info = new LinkedList<Map<String,String>>();
 		for (Long poll : polls) {
@@ -90,37 +92,37 @@ public class PotluckBean implements Serializable {
 		return poll_info;
 	}
 	
-	public Collection<Event> getEvents() {
+	public Collection<Event> getEvents() throws LoginException {
 		return potluckManager.getEvents();
 	}
 
-	public Collection<User> getAttending() {
+	public Collection<User> getAttending() throws LoginException {
 		return potluckManager.getAttending();
 	}
 
-	public Collection<User> getInvited() {
+	public Collection<User> getInvited() throws LoginException {
 		return potluckManager.getInvited();
 	}
 
-	public Collection<String> getItems() {
+	public Collection<String> getItems() throws LoginException {
 		return potluckManager.getItems();
 	}
 
-	public Map<String, User> getCommitments() {
+	public Map<String, User> getCommitments() throws LoginException {
 		return potluckManager.getCommitments();
 	}
 
-	public Collection<User> getUncommitted() {
+	public Collection<User> getUncommitted() throws LoginException {
 		Set<User> uncommitted = new HashSet<>(getAttending());
 		uncommitted.removeAll(getCommitments().values());
 		return uncommitted;
 	}
 
-	public Collection<String> getRestrictions() {
+	public Collection<String> getRestrictions() throws LoginException {
 		return potluckManager.getRestrictions();
 	}
 
-	public boolean userIsInvited() {
+	public boolean userIsInvited() throws LoginException {
 		for (User user : potluckManager.getInvited()) {
 			if (user.getEmail().equals(sessionBean.getEmail())) {
 				return true;
@@ -129,7 +131,7 @@ public class PotluckBean implements Serializable {
 		return false;
 	}
 
-	public String acceptInvitation() {
+	public String acceptInvitation() throws LoginException {
 		potluckManager.acceptInvitation(sessionBean.getEmail());
 		return null;
 	}
@@ -146,7 +148,7 @@ public class PotluckBean implements Serializable {
 		this.inviteEmail = inviteEmail;
 	}
 
-	public String invite() {
+	public String invite() throws LoginException {
 		User user = userManager.getUser(getInviteEmail());
 		if (user == null) {
 			return null;
@@ -189,7 +191,7 @@ public class PotluckBean implements Serializable {
 		this.newEventDescription = newEventDescription;
 	}
 
-	public String schedule() {
+	public String schedule() throws NumberFormatException, LoginException {
 		String[] dateAndTime = getNewEventDate().split(" ");
 		String[] date = dateAndTime[0].split("-");
 		String[] time = dateAndTime[1].split(":");
@@ -211,12 +213,12 @@ public class PotluckBean implements Serializable {
 		this.newItem = newItem;
 	}
 
-	public String addItem() {
+	public String addItem() throws LoginException {
 		potluckManager.addItem(getNewItem());
 		return null;
 	}
 
-	public String commit(String item) {
+	public String commit(String item) throws LoginException {
 		potluckManager.commitToItem(item, sessionBean.getEmail());
 		return null;
 	}
@@ -232,7 +234,7 @@ public class PotluckBean implements Serializable {
 		this.newRestriction = newRestriction;
 	}
 
-	public String addRestriction() {
+	public String addRestriction() throws LoginException {
 		potluckManager.addRestriction(getNewRestriction());
 		return null;
 	}
@@ -248,7 +250,7 @@ public class PotluckBean implements Serializable {
 		return newName;
 	}
 	
-	public void changeName() {
+	public void changeName() throws LoginException {
 		potluckManager.changePotluckName(sessionBean.getEmail(),getNewName());
 	}
 	
@@ -263,7 +265,7 @@ public class PotluckBean implements Serializable {
 		return newDescription;
 	}
 	
-	public void changeDescription() {
+	public void changeDescription() throws LoginException {
 		potluckManager.changePotluckDescription(sessionBean.getEmail(),getnewDescription());
 	}
 	
